@@ -3,15 +3,8 @@ import { BackHandler, SafeAreaView, View, StatusBar, StyleSheet, ScrollView, Dim
 import { Sizes, Colors, Fonts } from "../../constants/styles";
 import { Input } from '@rneui/themed';
 import { useFocusEffect } from "@react-navigation/native";
-import { Switch } from '@rneui/themed';
-import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import {specialityList} from '../../constants/globals';
-import AuthService  from "../../services/api/auth";
 
 const { width, height } = Dimensions.get('window');
-const authService = new AuthService();
-
 
 const LoginRegisterScreen = ({ navigation }) => {
 
@@ -37,38 +30,33 @@ const LoginRegisterScreen = ({ navigation }) => {
     const [state, setState] = useState({
         backClickCount: 0,
         isLogin: true,
-        loginEmail: null,
+        loginUserName: null,
         loginPassword: null,
         loginPasswordSecure: false,
-        userName: null,
+        fullName: null,
         email: null,
         mobileNumber: null,
         registerPassword: null,
         confirmPassword: null,
         registerPasswordSecure: false,
         confirmPasswordSecure: false,
-        trainerSpeciality: null,
-        isTrainer: false,
     })
 
     const updateState = (data) => setState((state) => ({ ...state, ...data }))
 
-
     const {
         backClickCount,
         isLogin,
-        loginEmail,
+        loginUserName,
         loginPassword,
         loginPasswordSecure,
-        userName,
+        fullName,
         email,
         mobileNumber,
         registerPassword,
         confirmPassword,
         registerPasswordSecure,
         confirmPasswordSecure,
-        trainerSpeciality,
-        isTrainer,
     } = state;
 
     const canLogin = () => {
@@ -155,55 +143,14 @@ const LoginRegisterScreen = ({ navigation }) => {
     function registerInfo() {
         return (
             <View>
-                {userNameTextField()}
+                {fullNameTextField()}
                 {emailTextField()}
                 {mobileNumberTextField()}
                 {registerPasswordTextField()}
                 {confirmPasswordTextField()}
-                {isTrainerField()}
-                {isTrainer ? trainerSpecialityField() : null}
                 {registerButton()}
-                {/*continueWithOptionsInfo()*/}
-
+                {continueWithOptionsInfo()}
             </View>
-        )
-    }
-
-    function isTrainerField(){
-        return (
-            <View style={styles.isTrainerField}>
-                <Text style={{ ...Fonts.whiteColor14Medium }}>
-                    Are you a trainer?
-                </Text>
-                <Switch
-                    value={isTrainer}
-                    onValueChange={() => updateState({ isTrainer: !isTrainer })}
-                    style={{ ...Fonts.whiteColor14Medium }}
-                />
-            </View>
-        )
-    }
-
-    function trainerSpecialityField() {
-        return (
-        <Dropdown
-        style={styles.dropdown}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        iconStyle={styles.iconStyle}
-        data={specialityList}
-        maxHeight={300}
-        labelField="label"
-        valueField="value"
-        placeholder="Select trainer speciality"
-        value={trainerSpeciality}
-        onChange={item => {
-         updateState({ trainerSpeciality: item.value });
-        }}
-        renderLeftIcon={() => (
-          <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
-        )}
-      />
         )
     }
 
@@ -357,15 +304,15 @@ const LoginRegisterScreen = ({ navigation }) => {
         )
     }
 
-    function userNameTextField() {
+    function fullNameTextField() {
         const input = createRef();
         return (
             <Input
                 ref={input}
-                value={userName}
-                onChangeText={(text) => updateState({ userName: text })}
+                value={fullName}
+                onChangeText={(text) => updateState({ fullName: text })}
                 selectionColor={Colors.primaryColor}
-                placeholder='User Name'
+                placeholder='Full Name'
                 placeholderTextColor={Colors.whiteColor}
                 autoCapitalize='none'
                 leftIcon={{
@@ -385,11 +332,11 @@ const LoginRegisterScreen = ({ navigation }) => {
     function loginInfo() {
         return (
             <View>
-                {loginEmailTextField()}
+                {loginUserNameTextField()}
                 {loginPasswordTextField()}
                 {forgetPaswordText()}
                 {loginButton()}
-                {/*continueWithOptionsInfo()*/}
+                {continueWithOptionsInfo()}
             </View>
         )
     }
@@ -424,6 +371,19 @@ const LoginRegisterScreen = ({ navigation }) => {
         )
     }
 
+    function loginButton() {
+        return (
+            <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => navigation.push('BottomTabBar')}
+                style={styles.loginAndRegisterButtonStyle}
+            >
+                <Text style={{ ...Fonts.whiteColor18Bold }}>
+                    Login
+                </Text>
+            </TouchableOpacity>
+        )
+    }
 
     function forgetPaswordText() {
         return (
@@ -466,22 +426,22 @@ const LoginRegisterScreen = ({ navigation }) => {
         )
     }
 
-    function loginEmailTextField() {
+    function loginUserNameTextField() {
 
         const input = createRef();
         return (
             <Input
                 ref={input}
-                value={loginEmail}
-                onChangeText={(text) => updateState({ loginEmail: text })}
+                value={loginUserName}
+                onChangeText={(text) => updateState({ loginUserName: text })}
                 selectionColor={Colors.primaryColor}
-                placeholder='Enter Your Email'
+                placeholder='User Name'
                 placeholderTextColor={Colors.whiteColor}
                 autoCapitalize='none'
                 leftIcon={{
-                    type: 'material-community',
+                    type: 'material',
                     color: Colors.whiteColor,
-                    name: 'email-outline',
+                    name: 'person-outline',
                     size: 19,
                     onPress: () => { input.current.focus() }
                 }}
@@ -589,36 +549,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    dropdown: {
-        margin: Sizes.fixPadding * 2.0,
-        height: 50,
-        borderBottomColor: 'gray',
-        borderBottomWidth: 0.5,
-      },
-      icon: {
-        marginRight: 5,
-        color: Colors.whiteColor,
-      },
-      placeholderStyle: {
-        fontSize: 16,
-        color: Colors.whiteColor,
-      },
-      selectedTextStyle: {
-        fontSize: 16,
-        color: Colors.whiteColor,
-      },
-      iconStyle: {
-        width: 20,
-        height: 20,
-        tintColor: Colors.whiteColor,
-      },
-      isTrainerField: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: Sizes.fixPadding * 3.0,
-        marginHorizontal: Sizes.fixPadding * 2.0,
-      }
 })
 
 export default LoginRegisterScreen;

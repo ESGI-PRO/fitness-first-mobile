@@ -9,33 +9,19 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-import { Colors, Fonts, Sizes } from "../../constants/styles";
+import { Colors, Fonts, Sizes } from "../../../constants/styles";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { Snackbar } from "react-native-paper";
 import axios from "axios";
 import { ScrollView } from "react-native-gesture-handler";
-import training from "../../api/trainings";
-
-const API = training;
+import training from "../../../api/trainings";
+import { Heading } from "native-base";
+const API = training
 const { width } = Dimensions.get("window");
 
-const favoriteWorkoutsList = [
-  {
-    key: "1",
-    workoutImage: require("../../assets/images/workout/workout1.png"),
-    workoutName: "Weight Loss Training",
-    workoutDescription: "Full body workout",
-    workoutMinute: 9,
-    workoutLevel: 9,
-  },
-  {
-    key: "2",
-    workoutImage: require("../../assets/images/workout/workout12.png"),
-    workoutName: "Arm Workout",
-    workoutMinute: 9,
-    workoutLevel: 9,
-  },
+var recettesList = [
+  
 ];
 
 var trainingsList = [];
@@ -47,18 +33,17 @@ Array(trainingsList.length + 1)
     rowSwipeAnimatedValues[`${i}`] = new Animated.Value(0);
   });
 
-const FavoriteWorkoutsScreen = ({ navigation }) => {
+const NosTrainingsScreen = ({ navigation }) => {
   useEffect(() => {
-    getMyTrainingFetch();
+    getTrainingFetch();
     return () => {
-      getMyTrainingFetch();
+      getTrainingFetch();
     };
   }, []);
 
   const [showSnackBar, setShowSnackBar] = useState(false);
 
   const [listData, setListData] = useState(trainingsList);
-  const img = require("../../assets/images/workout/workout12.png");
 
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
@@ -149,21 +134,28 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
     </View>
   );
 
-  async function getMyTrainingFetch() {
-    API.getTrainingsByUserId("ERJHGFGH-FGHJK").then((response) => {
-      trainingsList.length = 0;
-      trainingsList.push(...response);
+  async function getTrainingFetch() {
+
+    API.getTrainings().then((response) => {
+      trainingsList.length = 0
+
+      var all = response.filter((element) => element.userId !== "ERJHGFGH-FGHJK")
+      trainingsList.push(...all);
       setListData(...response);
-      console.log("Categories:", trainingsList?.length);
+      console.log("Categories:", trainingsList?.length, trainingsList);
     });
   }
 
   return (
     <View style={{ flex: 1 }}>
-      {listData?.length == 0 ? (
+      {listData.length == 0 ? (
         noDataInfo()
       ) : (
-        <ScrollView>
+        <ScrollView className="m-5">
+          <Heading >Nos programmes certifiés </Heading>
+          <Text  fontSize="xs" className="py-5">Retrouvez et choissisez les meilleurs programmes adaptés a votre profil</Text>
+          
+          
           <View style={{ flex: 1 }}>
             {trainingsList.map((item) => {
               return (
@@ -171,7 +163,7 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
                 // <Text>{item.name}</Text>
                 // </>
 
-                <View key={`${item.id}`}>
+                <View key={`${item.id}`} className="border border-spacing-2 border-cyan-700 rounded m-2">
                   <TouchableOpacity
                     activeOpacity={0.9}
                     onPress={() =>
@@ -216,13 +208,6 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
                       source={item.image}
                       style={styles.suggestedWorkoutImageStyle}
                     />
-                    <Snackbar
-                      style={styles.snackBarStyle}
-                      visible={showSnackBar}
-                      onDismiss={() => setShowSnackBar(false)}
-                    >
-                      Item Remove From Favorite List.
-                    </Snackbar>
                   </TouchableOpacity>
                 </View>
               );
@@ -230,6 +215,13 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
           </View>
         </ScrollView>
       )}
+      <Snackbar
+        style={styles.snackBarStyle}
+        visible={showSnackBar}
+        onDismiss={() => setShowSnackBar(false)}
+      >
+        Item Remove From Favorite List.
+      </Snackbar>
     </View>
   );
 
@@ -289,4 +281,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FavoriteWorkoutsScreen;
+export default NosTrainingsScreen;
