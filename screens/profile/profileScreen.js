@@ -207,6 +207,13 @@ const ProfileScreen = ({ navigation }) => {
                 {optionsShort({ option: 'My Trainer', navigateTo: 'Trainers' })}
                 {optionsShort({ option: 'Favorite List', navigateTo: 'FavoriteList' })}
                 {optionsShort({ option: 'Notifications', navigateTo: 'Notifications' })}
+                {/* Recettes */}
+                {optionsShort({ option: 'Mes Recettes', navigateTo: 'Recettes' })}
+                {/* Recettes */}
+
+                {/* Training */}
+                {optionsShort({ option: 'Mes Programmes', navigateTo: 'Training' })}
+                {/* Training */}
                 {optionsShort({ option: 'Premium Plan', navigateTo: 'PremiumPlans' })}
                 {optionsShort({ option: 'Share with Friends' })}
                 {optionsShort({ option: 'Privacy Policy' })}
