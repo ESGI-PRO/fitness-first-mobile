@@ -71,6 +71,13 @@ const LoginRegisterScreen = ({ navigation }) => {
         isTrainer,
     } = state;
 
+    const canLogin = () => {
+        return loginEmail && loginPassword
+    }
+    const canRegister = () => {
+        return userName && email && mobileNumber && registerPassword && confirmPassword
+    }
+
     const registerUser = () => {
         const data = {
             userName: userName,
@@ -205,7 +212,7 @@ const LoginRegisterScreen = ({ navigation }) => {
             <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() =>{
-                    registerUser()
+                     canRegister() && registerUser()
                 }}
                 style={styles.loginAndRegisterButtonStyle}
             >
@@ -221,7 +228,7 @@ const LoginRegisterScreen = ({ navigation }) => {
             <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => {
-                    loginUser()
+                    canLogin() && loginUser()
                 }}
                 style={styles.loginAndRegisterButtonStyle}
             >
