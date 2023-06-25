@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -13,41 +13,11 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { Snackbar } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Button, Flex } from "native-base";
+import { getLoggedInUser } from "../../services/helpers/authUtils";
+import nutrition from "../../api/nutrition";
+import user from "../../api/user";
 
-const healthTipsList = [
-  {
-    id: "1",
-    healthTipImage: require("../../assets/images/tips/tip1.png"),
-    healthTip: "Recette 1",
-    healthTipDetail:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad",
-    isFavorite: false,
-  },
-  {
-    id: "2",
-    healthTipImage: require("../../assets/images/tips/tip2.png"),
-    healthTip: "Recette 2",
-    healthTipDetail:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad",
-    isFavorite: false,
-  },
-  {
-    id: "3",
-    healthTipImage: require("../../assets/images/tips/tip3.png"),
-    healthTip: "Recette 3",
-    healthTipDetail:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad",
-    isFavorite: false,
-  },
-  {
-    id: "4",
-    healthTipImage: require("../../assets/images/tips/tip4.png"),
-    healthTip: "Recette 4",
-    healthTipDetail:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad",
-    isFavorite: false,
-  },
-];
+const healthTipsList = [];
 
 const RecettesScreen = ({ navigation }) => {
   const [state, setState] = useState({
@@ -96,7 +66,30 @@ const RecettesScreen = ({ navigation }) => {
     updateState({ healthTips: newList });
   }
 
+  async function initRecettes() {
+    healthTipsList.length = 0;
+    await nutrition.getMyRecettes().then((recettes) => {
+      recettes.forEach((recette) => {
+        healthTipsList.push({
+          id: recette?.id,
+          healthTipImage: require("../../assets/images/tips/tip1.png"),
+          healthTip: recette?.title,
+          healthTipDetail:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad",
+          isFavorite: false,
+        });
+      });
+    });
+  }
+
   function healthTipsInfo() {
+    useEffect(() => {
+      initRecettes();
+      return () => {
+        initRecettes();
+      };
+    });
+
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
@@ -150,25 +143,27 @@ const RecettesScreen = ({ navigation }) => {
 
   function header() {
     return (
-      <Flex direction="row" className="flex justify-between mx-2">
+      <View className="flex flex-row justify-around items-center ">
         <Text
           style={{
             margin: Sizes.fixPadding * 2.0,
             ...Fonts.blackColor18SemiBold,
           }}
         >
-          Mes Recettes
+          Mes recettes
         </Text>
 
         <Button
-          colorScheme="primary"
-          onPress={() => {
-            console.log("hello");
-          }}
+          rounded
+          colorScheme="orange"
+          onPress={() => navigation.push("AddRecettes")}
+          success
         >
-          Primary
+          <Text className="text-white border border-rounded bg-orange rounded-lg">
+            +
+          </Text>
         </Button>
-      </Flex>
+      </View>
     );
   }
 };
