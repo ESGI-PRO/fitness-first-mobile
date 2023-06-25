@@ -122,7 +122,7 @@ const HealthTipsScreen = ({ navigation }) => {
               ...Fonts.blackColor14SemiBold,
             }}
           >
-            {item.healthTip}
+             dddd - {item.healthTip}
           </Text>
           <Text style={{ ...Fonts.grayColor13Regular }}>
             {item.healthTipDetail}
