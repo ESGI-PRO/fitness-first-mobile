@@ -1,23 +1,25 @@
 import axios from "axios";
+import user from "./user";
 
 class Nutrition {
   API_URL = "http://localhost:8000/nutrition/";
   recettes = [];
+  MyRecettes = [];
   ingredients = [];
   categories = [];
 
   constructor() {
-    this.getRecettes().then(responses => {
-        this.recettes = responses
-    })
+    this.getRecettes().then((responses) => {
+      this.recettes = responses;
+    });
 
-    this.getIngredients().then(responses => {
-        this.ingredients = responses
-    })
+    this.getIngredients().then((responses) => {
+      this.ingredients = responses;
+    });
 
-    this.getCategories().then(responses => {
-        this.categories = responses
-    })
+    this.getCategories().then((responses) => {
+      this.categories = responses;
+    });
   }
 
   async getRecettes() {
@@ -25,6 +27,20 @@ class Nutrition {
       const responses = await axios.get(this.API_URL + "");
       var data = responses.data.data.nutrition;
       resolve(data);
+    });
+  }
+
+  async getMyRecettes() {
+    console.log(
+      "🚀 ~ file: nutrition.js:39 ~ Nutrition ~ getMyRecettes ~ typeof user.userId :",
+      user.userId
+    );
+
+    if (user.userId === null) resolve(null);
+    return new Promise(async (resolve, reject) => {
+      const responses = await axios.get(this.API_URL + user.userId + "/user");
+      this.MyRecettes = responses.data.data.nutrition;
+      resolve(this.MyRecettes);
     });
   }
 
@@ -37,7 +53,7 @@ class Nutrition {
   }
 
   getIngredientsVarable() {
-    return this.ingredients
+    return this.ingredients;
   }
 
   async getCategories() {
@@ -57,7 +73,7 @@ class Nutrition {
   }
 
   async getIngredientsByID(id) {
-    console.log("getIngredientsByID", id , typeof id)
+    console.log("getIngredientsByID", id, typeof id);
     return new Promise(async (resolve, reject) => {
       const responses = await axios.get(this.API_URL + "ingredients/" + id);
       var data = responses.data.data.nutrition;
@@ -73,8 +89,12 @@ class Nutrition {
     });
   }
 
-  async VarGlobal(key){
-    return this[key]
+  async create(data) {
+    return new Promise(async (resolve, reject) => {
+      const responses = await axios.post(this.API_URL, data);
+      var results = responses.data.data.nutrition;
+      resolve(results);
+    });
   }
 }
 

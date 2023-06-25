@@ -2,12 +2,14 @@ import {
   Box,
   Button,
   Center,
+  CloseIcon,
   Divider,
   FlatList,
   Flex,
   HStack,
   Heading,
   Icon,
+  IconButton,
   InputGroup,
   Modal,
   Radio,
@@ -28,6 +30,8 @@ import diacritic from "diacritic";
 import nutrition from "../../../api/nutrition";
 import { Header, ListItem } from "@rneui/base";
 import InstructionsPageScreen from "./instructionsPage";
+import { Alert } from "native-base";
+import user from "../../../api/user";
 
 const AddRecettesScreen = ({ navigation, route }) => {
   const data = route?.params?.data;
@@ -51,7 +55,8 @@ const AddRecettesScreen = ({ navigation, route }) => {
   const [searchWord, setWord] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [ingredients, setIngredients] = useState(nutrition.ingredients);
-  const [showModal2, setShowModal2] = useState(false);
+  const [alert, setAlert] = useState({});
+  const [details, setDetails] = useState([]);
   const [showModal3, setShowModal3] = useState(false);
 
   const [title, setTitle] = useState("");
@@ -66,19 +71,85 @@ const AddRecettesScreen = ({ navigation, route }) => {
       <StatusBar backgroundColor={Colors.primaryColor} />
       <ScrollView>
         <View style={{ flex: 1 }}>
+          {AlertMessage()}
           {display === false ? (
             <>
               {header()}
               {formRecette()}
               {steppers()}
             </>
-          ) : null}
-
-          {display === true ? switchPage() : null}
+          ) : (
+            switchPage()
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
   );
+
+  function switchPage() {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bodyBackColor }}>
+        <StatusBar backgroundColor={Colors.primaryColor} />
+        <ScrollView>
+          <View style={{ flex: 1 }}>
+            {header()}
+            <Text
+              fontSize="md"
+              className="mx-5"
+              onPress={() => setDisplay(false)}
+            >
+              Retour
+            </Text>
+            {formRecetteIng()}
+            {saisieForm()}
+            {AddIngredientModal()}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  function AlertMessage() {
+    return Object.keys(alert)?.length > 0 ? (
+      <Center>
+        <Alert maxW="400" status={alert?.status} colorScheme="info">
+          <VStack space={2} flexShrink={1} w="100%">
+            <HStack
+              flexShrink={1}
+              space={2}
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <HStack flexShrink={1} space={2} alignItems="center">
+                <Alert.Icon />
+                <Text fontSize="md" fontWeight="medium" color="coolGray.800">
+                  {alert?.message}
+                </Text>
+              </HStack>
+              <IconButton
+                variant="unstyled"
+                _focus={{
+                  borderWidth: 0,
+                }}
+                icon={<CloseIcon size="3" />}
+                _icon={{
+                  color: "coolGray.600",
+                }}
+              />
+            </HStack>
+          </VStack>
+        </Alert>
+      </Center>
+    ) : (
+      ""
+    );
+  }
+
+  function FicheProduit(id) {
+    var item = ingredients.find((ingredient) => ingredient.id === id);
+    setDetails(item);
+    setShowModal(!showModal);
+  }
 
   function addInList(item) {
     console.log(item);
@@ -87,7 +158,7 @@ const AddRecettesScreen = ({ navigation, route }) => {
       {
         name: item.name,
         quantite: 0,
-        ingredients: item.id
+        ingredients: item.id,
       },
     ]);
 
@@ -95,7 +166,7 @@ const AddRecettesScreen = ({ navigation, route }) => {
   }
 
   function sendData() {
-    var array = [...listIngredients, { description: instruction }];
+    var array = [...listIngredients, instruction];
     setList([...list, array]);
     setDisplay(false);
     setListIngredients([]);
@@ -107,7 +178,7 @@ const AddRecettesScreen = ({ navigation, route }) => {
       console.log(name, key, value);
       const updatedData = listIngredients.map((item) => {
         if (item.name === name) {
-          return { ...item, quantite: value };
+          return { ...item, quantite: Number(value) };
         }
         return item;
       });
@@ -122,6 +193,7 @@ const AddRecettesScreen = ({ navigation, route }) => {
 
       setListIngredients([...array]);
     };
+
     return (
       <View>
         <Text fontSize="xs">{JSON.stringify(listIngredients)}</Text>
@@ -142,7 +214,10 @@ const AddRecettesScreen = ({ navigation, route }) => {
                   </Text>
                 </View>
 
-                <Text colorScheme="primary" onPress={() => setShowModal(true)}>
+                <Text
+                  colorScheme="primary"
+                  onPress={() => FicheProduit(item?.ingredients)}
+                >
                   Voir la fiche produit
                 </Text>
               </View>
@@ -157,8 +232,6 @@ const AddRecettesScreen = ({ navigation, route }) => {
                   modifyObject(item.name, "quantite", text)
                 }
               />
-
-              {AddIngredientModal(item)}
             </VStack>
           );
         })}
@@ -207,33 +280,44 @@ const AddRecettesScreen = ({ navigation, route }) => {
     );
   }
 
-  function switchPage() {
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bodyBackColor }}>
-        <StatusBar backgroundColor={Colors.primaryColor} />
-        <ScrollView>
-          <View style={{ flex: 1 }}>
-            {header()}
-            {formRecetteIng()}
-            {saisieForm()}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
-
   function steppers() {
+    function deleteStep(index) {
+      var array = list;
+      array.splice(index, 1);
+
+      setList([...array]);
+    }
+
+    function modifyStep(item) {
+      setListIngredients(item);
+      setDisplay(true);
+    }
+
     return (
       <View className="m-4">
         <Text fontSize="xs">{JSON.stringify(list)}</Text>
         {list.map((array, index) => {
           return (
             <>
-              <Box border="1" borderRadius="md">
+              <Box border="1" borderRadius="md" className="my-3 py-3">
                 <VStack space="4" divider={<Divider />}>
-                  <Box px="4" pt="4">
-                    <Heading>Etape {index + 1} </Heading>
-                  </Box>
+                  <View className="flex flex-row my-5 justify-between items-center">
+                    <Heading>Etape {index + 1}</Heading>
+                    {/* <Text
+                      colorScheme="primary"
+                      className="underline italic"
+                      onPress={() => modifyStep(array)}
+                    >
+                      modifier
+                    </Text> */}
+                    <Text
+                      colorScheme="primary"
+                      className="underline italic"
+                      onPress={() => deleteStep(index)}
+                    >
+                      supprimer
+                    </Text>
+                  </View>
                   <Box px="4">
                     {/* <Text fontSize="xs">Ingredients : </Text> */}
 
@@ -241,6 +325,7 @@ const AddRecettesScreen = ({ navigation, route }) => {
                       <Text fontSize="xs">
                         {it?.name}{" "}
                         {it?.quantite ? ` - ${it?.quantite} grammes ` : ""}{" "}
+                        {typeof it === "string" ? `Ìnstructions : ${it} ` : ""}{" "}
                       </Text>
                     ))}
                   </Box>
@@ -252,7 +337,7 @@ const AddRecettesScreen = ({ navigation, route }) => {
 
         <Button
           colorScheme="primary"
-          className={ list.length > 1 ? "" : "hidden"}
+          className={list.length > 0 ? "" : "hidden"}
           onPress={() => {
             handlesubmit();
           }}
@@ -264,34 +349,48 @@ const AddRecettesScreen = ({ navigation, route }) => {
   }
 
   function handlesubmit() {
-    var i = [];
+    var instructions = [];
 
     list.map((array, index) => {
-      array.map((it, index) => {
-        i.push({
-          order: index,
-          produits: list.for,
-        });
+      instructions.push({
+        order: index + 1,
+        produits: array.filter((item, i) => {
+          return typeof item === "object";
+        }),
+        description: array[array.length - 1],
       });
     });
+
     var p = {
       title: title,
-      userId: 9,
-      instructions: [
-        {
-          order: 0,
-          produits: [
-            {
-              quantite: "aker.number.int({ max: 360 }),",
-              ingredients: "faker.number.int({ max: 191 }),",
-            },
-          ],
-          description: "",
-        },
-      ],
+      UserId: user.userId,
+      instructions,
     };
 
     console.log(p);
+    console.log("en cours ...");
+
+    nutrition.create(p).then((res) => {
+      if (res) {
+        resetAllFormValues();
+        setAlert({
+          success: "success",
+          message: "Votre recette " + title + " a bien ete créée",
+        });
+
+        setTimeout(() => {
+          nutrition.getMyRecettes();
+          setAlert({});
+          navigation.push('Recettes')
+        }, 5000);
+      }
+    });
+  }
+
+  function resetAllFormValues() {
+    setList([]);
+    setTitle("");
+    setListIngredients([]);
   }
 
   function header() {
@@ -303,7 +402,7 @@ const AddRecettesScreen = ({ navigation, route }) => {
             ...Fonts.blackColor18SemiBold,
           }}
         >
-          Ajouter une Recette
+          {title.length > 0 ? title : "Ajouter un titre a votre recette"}
         </Text>
       </Flex>
     );
@@ -399,14 +498,13 @@ const AddRecettesScreen = ({ navigation, route }) => {
                               <Text
                                 colorScheme="primary"
                                 className=" w-4 my-4 h-2 italic"
-                                onPress={() => setShowModal(true)}
+                                onPress={() => FicheProduit(item?.id)}
                               >
                                 Voir la fiche produit
                               </Text>
                             </ListItem.Subtitle>
                           </ListItem.Content>
                         </ListItem>
-                        {AddIngredientModal(item)}
                       </>
                     )}
                     ListEmptyComponent={<Text>Aucun résultat</Text>}
@@ -420,200 +518,69 @@ const AddRecettesScreen = ({ navigation, route }) => {
     );
   }
 
-  function AddIngredientModal(item) {
+  function AddIngredientModal() {
     return (
       <Center>
         <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
           <Modal.Content maxWidth="350">
             <Modal.CloseButton />
-            <Modal.Header> Fiche produit : {item.name}</Modal.Header>
+            <Modal.Header> Fiche produit : {details?.name}</Modal.Header>
             <Modal.Body>
               <VStack space={3}>
                 <HStack alignItems="center" justifyContent="space-between">
                   <Text fontWeight="medium">Sucre :</Text>
-                  <Text color="blueGray.400"> {item.sugar_g}/gr</Text>
+                  <Text color="blueGray.400"> {details?.sugar_g}/gr</Text>
                 </HStack>
 
                 <HStack alignItems="center" justifyContent="space-between">
                   <Text fontWeight="medium">Calories</Text>
-                  <Text color="blueGray.400"> {item.calories}/gr</Text>
+                  <Text color="blueGray.400"> {details?.calories}/gr</Text>
                 </HStack>
 
                 <HStack alignItems="center" justifyContent="space-between">
                   <Text fontWeight="medium">fat_total_g</Text>
-                  <Text color="blueGray.400"> {item.fat_total_g}/gr</Text>
+                  <Text color="blueGray.400"> {details?.fat_total_g}/gr</Text>
                 </HStack>
 
                 <HStack alignItems="center" justifyContent="space-between">
                   <Text fontWeight="medium">Protéine</Text>
-                  <Text color="blueGray.400"> {item.protein_g}/gr</Text>
+                  <Text color="blueGray.400"> {details?.protein_g}/gr</Text>
                 </HStack>
 
                 <HStack alignItems="center" justifyContent="space-between">
                   <Text fontWeight="medium">Sodium </Text>
-                  <Text color="blueGray.400"> {item.protein_g}/mg</Text>
+                  <Text color="blueGray.400"> {details?.protein_g}/mg</Text>
                 </HStack>
 
                 <HStack alignItems="center" justifyContent="space-between">
                   <Text fontWeight="medium">Potassium</Text>
-                  <Text color="blueGray.400"> {item.potassium_mg}/mg</Text>
+                  <Text color="blueGray.400"> {details?.potassium_mg}/mg</Text>
                 </HStack>
 
                 <HStack alignItems="center" justifyContent="space-between">
                   <Text fontWeight="medium">Cholesterol </Text>
-                  <Text color="blueGray.400"> {item.cholesterol_mg}/mg</Text>
+                  <Text color="blueGray.400">
+                    {" "}
+                    {details?.cholesterol_mg}/mg
+                  </Text>
                 </HStack>
 
                 <HStack alignItems="center" justifyContent="space-between">
                   <Text fontWeight="medium">Carbohydrates </Text>
                   <Text color="blueGray.400">
                     {" "}
-                    {item.carbohydrates_total_g}/g
+                    {details?.carbohydrates_total_g}/g
                   </Text>
                 </HStack>
 
                 <HStack alignItems="center" justifyContent="space-between">
                   <Text fontWeight="medium">Fibre </Text>
-                  <Text color="blueGray.400"> {item.fiber_g}/g</Text>
+                  <Text color="blueGray.400"> {details?.fiber_g}/g</Text>
                 </HStack>
               </VStack>
             </Modal.Body>
-            <Modal.Footer>
-              <Button
-                flex="1"
-                onPress={() => {
-                  setShowModal2(true);
-                }}
-              >
-                Continue
-              </Button>
-            </Modal.Footer>
           </Modal.Content>
         </Modal>
-
-        {/* <Modal
-          isOpen={showModal2}
-          onClose={() => setShowModal2(false)}
-          size="lg"
-        >
-          <Modal.Content maxWidth="350">
-            <Modal.CloseButton />
-            <Modal.Header>Select Address</Modal.Header>
-            <Modal.Body>
-              <VStack>
-                <Text fontSize="xs">Quantite</Text>
-
-                <Input
-                  placeholder={`Quantité de ${item.name} en gr`}
-                  onChangeText={(text) => setQuantité(text)}
-                />
-
-                <Text fontSize="xs">instructions </Text>
-
-                <TextArea
-                  shadow={2}
-                  h={20}
-                  placeholder="Decrivez votre programme ..."
-                  value={instruction}
-                  onChangeText={(text) => setInstruction(text)}
-                  selectionColor={Colors.primaryColor}
-                  className="w-full m-1"
-                  _light={{
-                    placeholderTextColor: "trueGray.700",
-                    bg: "coolGray.100",
-                    _hover: {
-                      bg: "coolGray.200",
-                    },
-                    _focus: {
-                      bg: "coolGray.200:alpha.70",
-                    },
-                  }}
-                  _dark={{
-                    bg: "coolGray.800",
-                    _hover: {
-                      bg: "coolGray.900",
-                    },
-                    _focus: {
-                      bg: "coolGray.900:alpha.70",
-                    },
-                  }}
-                />
-              </VStack>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button
-                flex="1"
-                onPress={() => {
-                  setShowModal3(true);
-                }}
-              >
-                Continue
-              </Button>
-            </Modal.Footer>
-          </Modal.Content>
-        </Modal>
-
-        <Modal
-          isOpen={showModal3}
-          size="lg"
-          onClose={() => setShowModal3(false)}
-        >
-          <Modal.Content maxWidth="350">
-            <Modal.CloseButton />
-            <Modal.Header>Payment Options</Modal.Header>
-            <Modal.Body>
-              <Radio.Group name="payment" size="sm">
-                <VStack space={3}>
-                  <Radio
-                    alignItems="flex-start"
-                    _text={{
-                      mt: "-1",
-                      ml: "2",
-                      fontSize: "sm",
-                    }}
-                    value="payment1"
-                  >
-                    Cash on delivery
-                  </Radio>
-                  <Radio
-                    alignItems="flex-start"
-                    _text={{
-                      mt: "-1",
-                      ml: "2",
-                      fontSize: "sm",
-                    }}
-                    value="payment2"
-                  >
-                    Credit/ Debit/ ATM Card
-                  </Radio>
-                  <Radio
-                    alignItems="flex-start"
-                    _text={{
-                      mt: "-1",
-                      ml: "2",
-                      fontSize: "sm",
-                    }}
-                    value="payment3"
-                  >
-                    UPI
-                  </Radio>
-                </VStack>
-              </Radio.Group>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button
-                flex="1"
-                onPress={() => {
-                  setShowModal(false);
-                  setShowModal2(false);
-                  setShowModal3(false);
-                }}
-              >
-                Checkout
-              </Button>
-            </Modal.Footer>
-          </Modal.Content>
-        </Modal> */}
       </Center>
     );
   }
