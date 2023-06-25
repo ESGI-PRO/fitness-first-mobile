@@ -77,9 +77,12 @@ const RecettesScreen = ({ navigation }) => {
           healthTipDetail:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad",
           isFavorite: false,
+          ...recette
         });
       });
     });
+
+    console.log(healthTipsList);
   }
 
   function healthTipsInfo() {
@@ -93,7 +96,7 @@ const RecettesScreen = ({ navigation }) => {
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("RecettesDetailsScreen", { item: item })}
+        onPress={() => navigation.push("HealthTipsDetail", { item: item })}
         style={styles.healthTipsInfoWrapStyle}
       >
         <View>

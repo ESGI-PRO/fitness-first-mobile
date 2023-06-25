@@ -28,6 +28,7 @@ import { NativeBaseProvider, Box } from "native-base";
 import ExercicesDetailsScreen from './screens/training/pages/exercicesDetail';
 import AddRecettesScreen from "./screens/recettes/pages/addRecettes";
 import InstructionsPageScreen from "./screens/recettes/pages/instructionsPage";
+import RecettesDetailsScreen from "./screens/recettesDetails/recettesDetailsScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -86,6 +87,7 @@ const App = () => {
           {/* Recettes */}
           <Stack.Screen name="Recettes" component={RecettesScreen} />
           <Stack.Screen name="AddRecettes" component={AddRecettesScreen} />
+          <Stack.Screen name="RecettesDetailsScreen" component={RecettesDetailsScreen} />
           <Stack.Screen name="InstructionsPage" component={InstructionsPageScreen} />
 
           {/* Recettes */}
