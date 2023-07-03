@@ -1,4 +1,5 @@
 import axios from "axios";
+import user from "./user";
 
 class TrainingsAPI {
   API_URL = "http://localhost:8000/training/";
@@ -20,14 +21,13 @@ class TrainingsAPI {
     return new Promise(async (resolve, reject) => {
       const responses = await axios.get(this.API_URL + "");
       var data = responses.data.data.training;
-
       resolve(data);
     });
   }
 
   async getTrainingsByUserId(userId) {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + "user/" + "ERJHGFGH-FGHJK");
+      const responses = await axios.get(this.API_URL + "user/" + user.userId);
       var data = responses.data.data.training;
 
       resolve(data);
@@ -42,7 +42,7 @@ class TrainingsAPI {
         durationStart: training.durationStart,
         durationEnd: training.durationEnd,
         category: training.category,
-        userId: training.userId,
+        userId: user.userId,
         image:
           "https://randomwordgenerator.com/img/picture-generator/53e1d04a4c5aa414f1dc8460962e33791c3ad6e04e5074417c2b79d59448cc_640.jpg",
         listExercices: [],
