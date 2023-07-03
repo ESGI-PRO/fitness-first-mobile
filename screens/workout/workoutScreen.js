@@ -18,6 +18,7 @@ import axios from "axios";
 import training from "../../api/trainings";
 import { Box } from "native-base";
 import { TouchableOpacityBase } from "react-native";
+import user from "../../api/user";
 const { width, height } = Dimensions.get("window");
 
 const trainingsAPI = training;
@@ -282,7 +283,7 @@ const WorkoutScreen = ({ navigation }) => {
   function getWorkouts() {
     trainingsAPI.getTrainings().then((response) => {
       response.forEach((item) => {
-        if (item.userId !== "ERJHGFGH-FGHJK") {
+        if (item.userId !== user.userId) {
           topWorkoutsList.push({
             id: item.id,
             workoutImage: require("../../assets/images/workout/workout1.png"),

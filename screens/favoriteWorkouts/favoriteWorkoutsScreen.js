@@ -16,6 +16,7 @@ import { Snackbar } from "react-native-paper";
 import axios from "axios";
 import { ScrollView } from "react-native-gesture-handler";
 import training from "../../api/trainings";
+import user from "../../api/user";
 
 const API = training;
 const { width } = Dimensions.get("window");
@@ -150,7 +151,7 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
   );
 
   async function getMyTrainingFetch() {
-    API.getTrainingsByUserId("ERJHGFGH-FGHJK").then((response) => {
+    API.getTrainingsByUserId(user.userId).then((response) => {
       trainingsList.length = 0;
       trainingsList.push(...response);
       setListData(...response);

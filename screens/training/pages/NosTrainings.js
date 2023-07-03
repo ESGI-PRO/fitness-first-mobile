@@ -17,12 +17,11 @@ import axios from "axios";
 import { ScrollView } from "react-native-gesture-handler";
 import training from "../../../api/trainings";
 import { Heading } from "native-base";
-const API = training
+import user from "../../../api/user";
+const API = training;
 const { width } = Dimensions.get("window");
 
-var recettesList = [
-  
-];
+var recettesList = [];
 
 var trainingsList = [];
 
@@ -135,11 +134,10 @@ const NosTrainingsScreen = ({ navigation }) => {
   );
 
   async function getTrainingFetch() {
-
     API.getTrainings().then((response) => {
-      trainingsList.length = 0
+      trainingsList.length = 0;
 
-      var all = response.filter((element) => element.userId !== "ERJHGFGH-FGHJK")
+      var all = response.filter((element) => element.userId !== user.userId);
       trainingsList.push(...all);
       setListData(...response);
       console.log("Categories:", trainingsList?.length, trainingsList);
@@ -152,10 +150,12 @@ const NosTrainingsScreen = ({ navigation }) => {
         noDataInfo()
       ) : (
         <ScrollView className="m-5">
-          <Heading >Nos programmes certifiés </Heading>
-          <Text  fontSize="xs" className="py-5">Retrouvez et choissisez les meilleurs programmes adaptés a votre profil</Text>
-          
-          
+          <Heading>Nos programmes certifiés </Heading>
+          <Text fontSize="xs" className="py-5">
+            Retrouvez et choissisez les meilleurs programmes adaptés a votre
+            profil
+          </Text>
+
           <View style={{ flex: 1 }}>
             {trainingsList.map((item) => {
               return (
@@ -163,7 +163,10 @@ const NosTrainingsScreen = ({ navigation }) => {
                 // <Text>{item.name}</Text>
                 // </>
 
-                <View key={`${item.id}`} className="border border-spacing-2 border-cyan-700 rounded m-2">
+                <View
+                  key={`${item.id}`}
+                  className="border border-spacing-2 border-cyan-700 rounded m-2"
+                >
                   <TouchableOpacity
                     activeOpacity={0.9}
                     onPress={() =>

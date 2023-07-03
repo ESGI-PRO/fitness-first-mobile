@@ -30,6 +30,7 @@ import { Input } from "@rneui/base";
 import { Svg, Path } from "react-native-svg";
 import training from "../../../api/trainings";
 import { Dimensions } from "react-native";
+import user from "../../../api/user";
 const { width, height } = Dimensions.get("window");
 
 const API = training;
@@ -198,7 +199,7 @@ const TrainingAddScreen = ({ navigation }) => {
       durationStart,
       durationEnd,
       category: 5,
-      userId: "ERJHGFGH-FGHJK",
+      userId: user.userId,
       image:
         "https://randomwordgenerator.com/img/picture-generator/53e1d04a4c5aa414f1dc8460962e33791c3ad6e04e5074417c2b79d59448cc_640.jpg",
       listExercices: [],
@@ -210,11 +211,10 @@ const TrainingAddScreen = ({ navigation }) => {
     };
     console.log(values);
 
-    await axios.post("http://localhost:8000/training/", values).then((res) => {
-      console.log(res);
-      console.log(res.data);
-    });
-    // console.values;
+    training.createTraining(values).then(async (training) =>  {
+      await training.getExercices()
+      await training.getTrainings()
+    })
   };
 
   async function getExercicesFetch() {
@@ -407,13 +407,13 @@ const TrainingAddScreen = ({ navigation }) => {
           )
         ) {
           setExercices([...exercicesSelected, newArray]);
-          setEditExos(0);
+          setEditExos({});
           setSeries(0);
           setRepetitions(0);
 
           console.log("EXO AJOUTE ", exercicesSelected);
         } else {
-          setEditExos(0);
+          setEditExos({});
           setSeries(0);
           setRepetitions(0);
           setExercices([
