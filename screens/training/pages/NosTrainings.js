@@ -95,7 +95,7 @@ const NosTrainingsScreen = ({ navigation }) => {
           ) : null}
           <Text style={{ ...Fonts.blackColor12SemiBold }}>0 Min - 0 level</Text>
         </View>
-        <Image source={img} style={styles.favoriteWorkoutImageStyle} />
+        {/* <Image source={img} style={styles.favoriteWorkoutImageStyle} /> */}
       </TouchableOpacity>
     </TouchableHighlight>
   );
@@ -140,13 +140,13 @@ const NosTrainingsScreen = ({ navigation }) => {
       var all = response.filter((element) => element.userId !== user.userId);
       trainingsList.push(...all);
       setListData(...response);
-      console.log("Categories:", trainingsList?.length, trainingsList);
+      console.log("Categories:", trainingsList?.length);
     });
   }
 
   return (
     <View style={{ flex: 1 }}>
-      {listData.length == 0 ? (
+      {listData?.length == 0 ? (
         noDataInfo()
       ) : (
         <ScrollView className="m-5">

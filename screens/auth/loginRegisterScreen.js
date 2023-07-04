@@ -71,6 +71,13 @@ const LoginRegisterScreen = ({ navigation }) => {
         isTrainer,
     } = state;
 
+    const canLogin = () => {
+        return loginEmail && loginPassword
+    }
+    const canRegister = () => {
+        return userName && email && mobileNumber && registerPassword && confirmPassword
+    }
+
     const registerUser = () => {
         const data = {
             userName: userName,
@@ -205,7 +212,7 @@ const LoginRegisterScreen = ({ navigation }) => {
             <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() =>{
-                    registerUser()
+                     canRegister() && registerUser()
                 }}
                 style={styles.loginAndRegisterButtonStyle}
             >
@@ -221,7 +228,7 @@ const LoginRegisterScreen = ({ navigation }) => {
             <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => {
-                    loginUser()
+                    canLogin() && loginUser()
                 }}
                 style={styles.loginAndRegisterButtonStyle}
             >
@@ -242,6 +249,7 @@ const LoginRegisterScreen = ({ navigation }) => {
                 selectionColor={Colors.primaryColor}
                 placeholder='Confirm Password'
                 placeholderTextColor={Colors.whiteColor}
+                autoCapitalize='none'
                 leftIcon={{
                     type: 'material',
                     color: Colors.whiteColor,
@@ -274,6 +282,7 @@ const LoginRegisterScreen = ({ navigation }) => {
                 selectionColor={Colors.primaryColor}
                 placeholder='Password'
                 placeholderTextColor={Colors.whiteColor}
+                autoCapitalize='none'
                 leftIcon={{
                     type: 'material',
                     color: Colors.whiteColor,
@@ -329,6 +338,7 @@ const LoginRegisterScreen = ({ navigation }) => {
                 value={email}
                 onChangeText={(text) => updateState({ email: text })}
                 selectionColor={Colors.primaryColor}
+                autoCapitalize='none'
                 placeholder='Email'
                 placeholderTextColor={Colors.whiteColor}
                 leftIcon={{
@@ -341,7 +351,7 @@ const LoginRegisterScreen = ({ navigation }) => {
                 style={{ ...Fonts.whiteColor14Medium, marginLeft: Sizes.fixPadding + 5.0 }}
                 inputContainerStyle={{ height: 40.0, borderBottomColor: Colors.whiteColor, borderBottomWidth: 2.0, }}
                 containerStyle={{ marginVertical: Sizes.fixPadding + 5.0, ...styles.textFieldStyle }}
-                keyboardType="email-address"
+                //keyboardType="email-address"
                 secureTextEntry={false}
             />
         )
@@ -357,6 +367,7 @@ const LoginRegisterScreen = ({ navigation }) => {
                 selectionColor={Colors.primaryColor}
                 placeholder='User Name'
                 placeholderTextColor={Colors.whiteColor}
+                autoCapitalize='none'
                 leftIcon={{
                     type: 'material',
                     color: Colors.whiteColor,
@@ -432,6 +443,7 @@ const LoginRegisterScreen = ({ navigation }) => {
                 selectionColor={Colors.primaryColor}
                 placeholder='Password'
                 placeholderTextColor={Colors.whiteColor}
+                autoCapitalize='none'
                 leftIcon={{
                     type: 'material',
                     color: Colors.whiteColor,
@@ -465,6 +477,7 @@ const LoginRegisterScreen = ({ navigation }) => {
                 selectionColor={Colors.primaryColor}
                 placeholder='Enter Your Email'
                 placeholderTextColor={Colors.whiteColor}
+                autoCapitalize='none'
                 leftIcon={{
                     type: 'material-community',
                     color: Colors.whiteColor,
@@ -475,7 +488,7 @@ const LoginRegisterScreen = ({ navigation }) => {
                 style={{ ...Fonts.whiteColor14Medium, marginLeft: Sizes.fixPadding + 5.0 }}
                 inputContainerStyle={{ height: 40.0, borderBottomColor: Colors.whiteColor, borderBottomWidth: 2.0, }}
                 containerStyle={styles.textFieldStyle}
-                keyboardType="email-address"
+                //keyboardType="email-address"
             />
         )
     }

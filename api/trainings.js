@@ -6,6 +6,7 @@ class TrainingsAPI {
   exercices = [];
   trainings = [];
   userTraining = [];
+  userId = user.userId;
 
   constructor() {
     this.getTrainings().then((item) => {
@@ -14,6 +15,10 @@ class TrainingsAPI {
 
     this.getExercices().then((item) => {
       this.exercices.push(...item);
+    });
+
+    this.getTrainingsByUserId(this.usersId).then((item) => {
+      this.userTraining.push(...item);
     });
   }
 

@@ -39,14 +39,14 @@ const favoriteWorkoutsList = [
   },
 ];
 
-var trainingsList = [];
+// var trainingsList = [];
 
 const rowSwipeAnimatedValues = {};
-Array(trainingsList.length + 1)
-  .fill("")
-  .forEach((_, i) => {
-    rowSwipeAnimatedValues[`${i}`] = new Animated.Value(0);
-  });
+// Array(trainingsList.length + 1)
+//   .fill("")
+//   .forEach((_, i) => {
+//     rowSwipeAnimatedValues[`${i}`] = new Animated.Value(0);
+//   });
 
 const FavoriteWorkoutsScreen = ({ navigation }) => {
   useEffect(() => {
@@ -58,7 +58,10 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
 
   const [showSnackBar, setShowSnackBar] = useState(false);
 
-  const [listData, setListData] = useState(trainingsList);
+  const [listData, setListData] = useState([]);
+
+  const [trainingsList , setTrainingsList] = useState([]);
+
   const img = require("../../assets/images/workout/workout12.png");
 
   const closeRow = (rowMap, rowKey) => {
@@ -152,9 +155,8 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
 
   async function getMyTrainingFetch() {
     API.getTrainingsByUserId(user.userId).then((response) => {
-      trainingsList.length = 0;
-      trainingsList.push(...response);
-      setListData(...response);
+      setTrainingsList([...response]);
+      setListData([...response]);
       console.log("Categories:", trainingsList?.length);
     });
   }

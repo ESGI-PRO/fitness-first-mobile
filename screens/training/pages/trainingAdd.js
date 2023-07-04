@@ -31,6 +31,7 @@ import { Svg, Path } from "react-native-svg";
 import training from "../../../api/trainings";
 import { Dimensions } from "react-native";
 import user from "../../../api/user";
+import FavoriteWorkoutsScreen from "../../favoriteWorkouts/favoriteWorkoutsScreen";
 const { width, height } = Dimensions.get("window");
 
 const API = training;
@@ -51,32 +52,6 @@ const healthTipsList = [
   },
 ];
 
-var categoriesList = [
-  // {
-  //   id: "1",
-  //   categoryName: "Yoga",
-  //   categoryImage: require("../../../assets/images/category/category1.png"),
-  //   bgColor: "#E3F2FD",
-  // },
-  // {
-  //   id: "2",
-  //   categoryName: "Strength training",
-  //   categoryImage: require("../../../assets/images/category/category2.png"),
-  //   bgColor: "#FFEBEE",
-  // },
-  // {
-  //   id: "3",
-  //   categoryName: "Balance exrcises",
-  //   categoryImage: require("../../../assets/images/category/category3.png"),
-  //   bgColor: "#E8F5E9",
-  // },
-  // {
-  //   id: "4",
-  //   categoryName: "Stretching",
-  //   categoryImage: require("../../../assets/images/category/category4.png"),
-  //   bgColor: "#EDE7F6",
-  // },
-];
 
 const rowSwipeAnimatedValues = {};
 
@@ -88,6 +63,7 @@ Array(healthTipsList.length + 1)
 
 const TrainingAddScreen = ({ navigation }) => {
   const [showSnackBar, setShowSnackBar] = useState(false);
+  const [categoriesList, setCategoriesList] = useState([])
 
   const [listData, setListData] = useState(healthTipsList);
 
@@ -209,18 +185,21 @@ const TrainingAddScreen = ({ navigation }) => {
         create: exercicesSelected,
       },
     };
-    console.log(values);
+    // console.log(values);
 
-    training.createTraining(values).then(async (training) =>  {
-      await training.getExercices()
-      await training.getTrainings()
-    })
+    training.createTraining(values).then(async (training) => {
+
+      // await training.getExercices();
+      // await training.getTrainings();
+    // console.log(training);
+
+      return <FavoriteWorkoutsScreen navigation={navigation} />
+    });
   };
 
   async function getExercicesFetch() {
-    categoriesList.length === 0;
     API.getExercices().then((response) => {
-      categoriesList.push(...response);
+      setCategoriesList([...response]);
     });
   }
 
@@ -254,10 +233,6 @@ const TrainingAddScreen = ({ navigation }) => {
   function exercicesList() {
     useEffect(() => {
       getExercicesFetch();
-
-      return () => {
-        getExercicesFetch();
-      };
     }, []);
     const renderItem = ({ item }) => (
       <TouchableOpacity
@@ -301,7 +276,7 @@ const TrainingAddScreen = ({ navigation }) => {
           }}
         >
           Exercices ({exercicesSelected?.length} selectionnés){" "}
-          {JSON.stringify(exercicesSelected)}
+          {/* {JSON.stringify(exercicesSelected)} */}
         </Text>
 
         <FlatList
@@ -380,8 +355,8 @@ const TrainingAddScreen = ({ navigation }) => {
   }
 
   function ActionsheetExercices() {
-    const [series, setSeries] = useState(0);
-    const [repetition, setRepetitions] = useState(0);
+    const [series, setSeries] = useState('');
+    const [repetition, setRepetitions] = useState('');
 
     useEffect(() => {
       console.log(editExos);
@@ -393,7 +368,7 @@ const TrainingAddScreen = ({ navigation }) => {
       };
     }, []);
 
-    function addSeries() {
+    async function addSeries() {
       console.log(series, repetition);
       var newArray = {
         exerciceId: editExos.exerciceId,
@@ -408,14 +383,14 @@ const TrainingAddScreen = ({ navigation }) => {
         ) {
           setExercices([...exercicesSelected, newArray]);
           setEditExos({});
-          setSeries(0);
-          setRepetitions(0);
+          setSeries('');
+          setRepetitions('');
 
           console.log("EXO AJOUTE ", exercicesSelected);
         } else {
           setEditExos({});
-          setSeries(0);
-          setRepetitions(0);
+          setSeries('');
+          setRepetitions('');
           setExercices([
             ...exercicesSelected.filter(
               (element) => element.id !== editExos.exerciceId
@@ -448,10 +423,14 @@ const TrainingAddScreen = ({ navigation }) => {
             <Box w="100%" maxWidth="300px">
               <Text bold fontSize="xl" mb="4">
                 Series
+                {JSON.stringify(series)}
+                {JSON.stringify(repetition)}
+                {JSON.stringify(editExos)}
               </Text>
               <FormControl mb="5" style={{ width: 300 }}>
                 <FormControl.Label>
-                  Combien de series pour cette exos ?{" "}
+                  
+                  Combien de series pour cette exercice ?{" "}
                 </FormControl.Label>
                 <Input
                   type="number"
@@ -474,7 +453,7 @@ const TrainingAddScreen = ({ navigation }) => {
               </Text>
               <FormControl mb="5" style={{ width: 300 }}>
                 <FormControl.Label>
-                  Combien de repetition pour cette exos ?
+                  Combien de repetition pour cette exercice ?
                 </FormControl.Label>
                 <Input
                   type="number"
@@ -517,7 +496,7 @@ const TrainingAddScreen = ({ navigation }) => {
       {listData.length == 0 ? (
         noDataInfo()
       ) : (
-        <ScrollView >
+        <ScrollView>
           <View className="flex m-5">
             <FormControl isRequired isInvalid={name?.length === 0} className="">
               <FormControl.Label>Nom </FormControl.Label>
@@ -581,16 +560,14 @@ const TrainingAddScreen = ({ navigation }) => {
             {DatesList()}
 
             {ActionsheetExercices()}
-
-            
           </View>
           <Button
-              colorScheme="green"
-              className="p-5 mt-7"
-              onPress={handleFormSubmit}
-            >
-              Ajouter
-            </Button>
+            colorScheme="green"
+            className="p-5 mt-7"
+            onPress={handleFormSubmit}
+          >
+            Ajouter
+          </Button>
         </ScrollView>
       )}
     </View>
@@ -630,7 +607,7 @@ const styles = StyleSheet.create({
     width: width / 4.5,
     marginRight: Sizes.fixPadding + 5.0,
     marginVertical: 4,
-    padding: Sizes.fixPadding
+    padding: Sizes.fixPadding,
   },
   healthTipImageStyle: {
     height: 100.0,
