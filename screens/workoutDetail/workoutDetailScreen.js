@@ -97,6 +97,7 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
   const item = route.params.item;
 
   useEffect(() => {
+
     getStarded();
 
     return () => {
@@ -112,10 +113,10 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
     isFavorite: false,
   });
 
-  function getStarded() {
+  async function getStarded() {
     workoutStepsList.length = 0;
 
-    console.log(item?.trainingOnExercices)
+    console.log(item)
 
     item?.trainingOnExercices?.forEach((item, i) => {
       console.log(i)

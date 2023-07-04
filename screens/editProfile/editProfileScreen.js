@@ -4,16 +4,17 @@ import { Colors, Fonts, Sizes, } from "../../constants/styles";
 import { MaterialIcons } from '@expo/vector-icons';
 import { SharedElement } from 'react-navigation-shared-element';
 import { BottomSheet } from '@rneui/themed';
+import user from "../../api/user";
 
 const EditProfileScreen = ({ navigation, route }) => {
 
     const id = route.params.id;
 
     const [state, setState] = useState({
-        name: 'Samantha John',
-        email: 'johnsamantha@gmail.com',
-        mobileNumber: '1236547890',
-        password: '123456789016',
+        name: user.data?.userName,
+        email: user.data?.email,
+        mobileNumber: user.data?.mobileNumber,
+        password: '',
         showBottomSheet: false,
     })
 

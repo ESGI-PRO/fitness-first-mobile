@@ -93,6 +93,15 @@ const RecettesScreen = ({ navigation }) => {
       };
     });
 
+    const EmptyListMessage = () => {
+      return (
+        <Text style={styles.emptyListStyle} className="text-center my-5">
+          Pas de recettes ajoutées
+        </Text>
+      );
+    };
+
+
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
@@ -140,6 +149,7 @@ const RecettesScreen = ({ navigation }) => {
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{}}
+        ListEmptyComponent={EmptyListMessage}
       />
     );
   }
