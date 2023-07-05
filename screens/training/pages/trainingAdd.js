@@ -423,9 +423,6 @@ const TrainingAddScreen = ({ navigation }) => {
             <Box w="100%" maxWidth="300px">
               <Text bold fontSize="xl" mb="4">
                 Series
-                {JSON.stringify(series)}
-                {JSON.stringify(repetition)}
-                {JSON.stringify(editExos)}
               </Text>
               <FormControl mb="5" style={{ width: 300 }}>
                 <FormControl.Label>

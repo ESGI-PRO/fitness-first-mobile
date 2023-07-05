@@ -24,7 +24,7 @@ class TrainingsAPI {
 
   async getTrainings() {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + "");
+      const responses = await axios.get(this.API_URL);
       var data = responses.data.data.training;
       resolve(data);
     });

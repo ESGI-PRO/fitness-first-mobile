@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  ImageBackground,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import messengerAPI from "../../api/messenger";
@@ -65,12 +66,35 @@ const ChatScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 
+  function premiumInfo() {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() => navigation.push("PremiumPlans")}
+        className="mx-5 p-5"
+      >
+        <ImageBackground
+          source={require("../../assets/images/premium_banner.png")}
+          // style={styles.premiumInfoBackImageStyle}
+          borderRadius={Sizes.fixPadding + 5.0}
+        >
+          <Text style={{ textAlign: "center", ...Fonts.whiteColor16SemiBold }}>
+            {`DEVENIR MEMBRE PREMIUM`}
+          </Text>
+        </ImageBackground>
+      </TouchableOpacity>
+    );
+  }
+
   function chats() {
     const EmptyListMessage = () => {
       return (
-        <Text style={styles.emptyListStyle} className="text-center my-5">
-          Pas de conversations
-        </Text>
+        <>
+          <Text style={styles.emptyListStyle} className="text-center my-5">
+            Pas de conversations
+          </Text>
+          {premiumInfo()}
+        </>
       );
     };
 
