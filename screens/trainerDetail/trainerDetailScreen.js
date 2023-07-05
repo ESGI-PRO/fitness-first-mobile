@@ -14,6 +14,7 @@ const TrainerDetailScreen = ({ navigation, route }) => {
 
     const item = route.params.item;
 
+    console.log(item)
     const [state, setState] = useState({
         showMore: false,
         isFavorite: false,
@@ -111,10 +112,10 @@ const TrainerDetailScreen = ({ navigation, route }) => {
                         {item.trainerSpeciality}
                     </Text>
                     <Text style={{ marginLeft: Sizes.fixPadding * 2.0, ...Fonts.primaryColor13Medium }}>
-                        1.5K
+                        {item?.data?.traineeIds?.length ? item?.data?.traineeIds.length : 0}
                     </Text>
                     <Text style={{ marginLeft: Sizes.fixPadding - 5.0, ...Fonts.grayColor13Regular }}>
-                        Followers
+                        eleves
                     </Text>
                 </View>
                 <View style={{ marginVertical: Sizes.fixPadding + 5.0, backgroundColor: '#cccccc', height: 1.0, }} />

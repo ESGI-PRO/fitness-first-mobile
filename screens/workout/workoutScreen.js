@@ -22,7 +22,6 @@ import user from "../../api/user";
 const { width, height } = Dimensions.get("window");
 
 const trainingsAPI = training;
-const topWorkoutsList = [];
 
 const categoriesList = [
   {
@@ -35,18 +34,18 @@ const categoriesList = [
 
 const exercicesList = [];
 
-const topTrainersList = [];
-
 const WorkoutScreen = ({ navigation }) => {
   const [state, setState] = useState({
     showSnackBar: false,
     snackBarMsg: null,
-    topWorkouts: topWorkoutsList,
   });
+
+  const [topWorkouts, setTopWorkouts] = useState([]);
+  const [topTrainersList, settopTrainersList] = useState([]);
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
-  const { showSnackBar, snackBarMsg, topWorkouts } = state;
+  const { showSnackBar, snackBarMsg } = state;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bodyBackColor }}>
@@ -77,29 +76,58 @@ const WorkoutScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 
+  function getTrainers() {
+    user.getUsers().then((users) => {
+      const list = users
+        .map((user) => {
+          if (user.isTrainer === true) {
+            return {
+              id: user.id,
+              trainerImage: require("../../assets/images/category/category1.png"),
+              trainerName: user.userName,
+              trainerSpeciality: user.trainerSpeciality,
+              data: {...user},
+            };
+          } else {
+            return null;
+          }
+        })
+        .filter((item) => item !== null);
+      settopTrainersList(list);
+    });
+  }
+
   function topTrainersInfo() {
+    useEffect(() => {
+      getTrainers();
+    }, []);
+
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => navigation.push("TrainerDetail", { item: item })}
         style={styles.topTrainerInfoWrapStyle}
       >
-        <Image source={item.trainerImage} style={styles.topTrainerImageStyle} />
+        <Image
+          source={item?.trainerImage}
+          style={styles.topTrainerImageStyle}
+        />
         <View
           style={{
             ...styles.topTrainerDetailWrapStyle,
-            backgroundColor: item.bgColor,
+            backgroundColor: item?.bgColor,
           }}
         >
           <Text numberOfLines={1} style={{ ...Fonts.blackColor12Regular }}>
-            {item.trainerName}
+            {item?.trainerName}
           </Text>
           <Text numberOfLines={1} style={{ ...Fonts.blackColor10Regular }}>
-            {item.trainerSpeciality}
+            {item?.trainerSpeciality}
           </Text>
         </View>
       </TouchableOpacity>
     );
+
     return (
       <View>
         <Text
@@ -113,7 +141,7 @@ const WorkoutScreen = ({ navigation }) => {
         </Text>
         <FlatList
           data={topTrainersList}
-          keyExtractor={(item) => `${item.id}`}
+          // keyExtractor={(item) => `${item.id}`}
           renderItem={renderItem}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -150,6 +178,8 @@ const WorkoutScreen = ({ navigation }) => {
   }
 
   async function getExercicesFetch() {
+    console.log("start exercices ");
+
     trainingsAPI.getExercices().then((response) => {
       response.forEach((it) => {
         exercicesList.push({
@@ -280,22 +310,25 @@ const WorkoutScreen = ({ navigation }) => {
     updateState({ topWorkouts: newList });
   }
 
-  function getWorkouts() {
-    trainingsAPI.getTrainings().then((response) => {
-      response.forEach((item) => {
-        if (item.userId !== user.userId) {
-          topWorkoutsList.push({
-            id: item.id,
+  async function getWorkouts() {
+    console.log("start getworkout ");
+    var p = [];
+    trainingsAPI.getTrainings().then((item) => {
+      for (let index = 0; index < 4; index++) {
+        if (item[index].userId !== user.userId) {
+          p.push({
+            id: item[index].id,
             workoutImage: require("../../assets/images/workout/workout1.png"),
-            workoutName: item.name,
-            workoutDescription: item.description,
+            workoutName: item[index].name,
+            workoutDescription: item[index].description,
             workoutMinute: 9,
             workoutLevel: 9,
             isFavorite: false,
             ...item,
           });
         }
-      });
+      }
+      setTopWorkouts(p);
     });
   }
 
@@ -305,7 +338,7 @@ const WorkoutScreen = ({ navigation }) => {
       return () => {
         getWorkouts();
       };
-    });
+    }, []);
     return (
       <View style={{ marginHorizontal: Sizes.fixPadding * 2.0 }}>
         <Text
@@ -316,11 +349,8 @@ const WorkoutScreen = ({ navigation }) => {
         >
           Top Workouts
         </Text>
-        {topWorkouts.map((item, i) => (
-          <View
-            key={`${item.id}`}
-            className={i > 2 ? "hidden" : ""}
-          >
+        {topWorkouts.map((item) => (
+          <View key={`${item.id}`}>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => navigation.push("WorkoutDetail", { item: item })}
@@ -328,10 +358,10 @@ const WorkoutScreen = ({ navigation }) => {
             >
               <View style={{ padding: Sizes.fixPadding }}>
                 <Text
-                //   style={{
-                //     marginBottom: Sizes.fixPadding - 7.0,
-                //     ...Fonts.blackColor14Medium,
-                //   }}
+                  //   style={{
+                  //     marginBottom: Sizes.fixPadding - 7.0,
+                  //     ...Fonts.blackColor14Medium,
+                  //   }}
                   style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                 >
                   {item.workoutName}
