@@ -31,18 +31,18 @@ const TrainersScreen = ({ navigation }) => {
   );
 
   function getMyTrainer() {
-    const m = selectTrainer.find(
+    const m = user?.trainers.find(
       (trainer) => trainer.id === user?.data?.trainerId
-    );
-
-    console.log(selectTrainer, m);
-
+    )
     setTrainersList({
       id: m?.id,
       trainerImage: require("../../assets/images/trainer/trainer1.png"),
-      trainerName: m?.name,
+      trainerName: m?.userName,
       trainerSpeciality: m?.trainerSpeciality
     });
+
+    console.log("trainersList" , trainersList);
+
   }
 
   function getMyStudents() {
@@ -147,6 +147,17 @@ const TrainersScreen = ({ navigation }) => {
         />
       </View>
     );
+
+    const EmptyListMessage = () => {
+      return (
+        <>
+          <Text style={styles.emptyListStyle} className="text-center my-5">
+            Pas de coach
+          </Text>
+        </>
+      );
+    };
+
     return (
       <FlatList
         data={trainersList}
@@ -157,6 +168,8 @@ const TrainersScreen = ({ navigation }) => {
           paddingBottom: Sizes.fixPadding,
           paddingTop: Sizes.fixPadding - 5.0,
         }}
+        ListEmptyComponent={EmptyListMessage}
+
       />
     );
   }
