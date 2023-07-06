@@ -1,14 +1,17 @@
 import axios from "axios";
 import user from "./user";
+import {API_URL} from '@env'
+
 
 class TrainingsAPI {
-  API_URL = "http://localhost:8000/training/";
+  API_URL = API_URL + "training/";
   exercices;
   trainings;
   userTraining;
   userId = user.userId;
 
   constructor() {
+    console.log('constructing' , this.API_URL);
     this.getTrainings().then((item) => {
       this.trainings = item
     });

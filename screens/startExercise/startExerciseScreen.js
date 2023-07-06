@@ -18,11 +18,12 @@ const { width, height } = Dimensions.get("window");
 const StartExerciseScreen = ({ navigation, route }) => {
   const exercice = route.params.exercice;
 
-  const [allExos, setAllExos] = useState(exercice.allExos);
+  const [allExos, setAllExos] = useState(exercice?.allExos);
   const [start, setStart] = useState(false);
-  const [valeur, setvaleur] = useState(0);
-  var time = "01:00";
+  const [valeur, setValeur] = useState(0);
+  const [time, setTime] = useState("01:00");
 
+  console.log(allExos)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bodyBackColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -51,35 +52,49 @@ const StartExerciseScreen = ({ navigation, route }) => {
       },
     ];
 
-    function timerWorks() {
-      //   if (start === true) {
-      //     let temps_restant = 60; // Temps initial en secondes
+    async function timerWorks() {
+      if (start === true) {
+        let temps_restant = 60; // Temps initial en secondes
 
-      //     const interval = setInterval(() => {
-      //       const minutes = Math.floor(temps_restant / 60);
-      //       const secondes = temps_restant % 60;
-      //       console.log(
-      //         `Temps restant : ${minutes.toString().padStart(2, "0")}:${secondes
-      //           .toString()
-      //           .padStart(2, "0")}`
-      //       );
-      //       time =
-      //         `${minutes.toString().padStart(2, "0")}:${secondes
-      //           .toString()
-      //           .padStart(2, "0")}`
+        const interval = setInterval(() => {
+          const minutes = Math.floor(temps_restant / 60);
+          const secondes = temps_restant % 60;
 
-      //       temps_restant--;
+          console.log(
+            `Temps restant : ${minutes.toString().padStart(2, "0")}:${secondes
+              .toString()
+              .padStart(2, "0")}`
+          );
 
-      //       if (temps_restant < 0) {
-      //         console.log("Temps écoulé !");
-      //         clearInterval(interval);
-      //         navigation.push("TakeRest");
-      //       }
-      //     }, 1000);
-      //   }
-      setInterval(() => {
-        console.log(1 + 0.1)
-      }, 1000);
+          setTime(
+            `${minutes.toString().padStart(2, "0")}:${secondes
+              .toString()
+              .padStart(2, "0")}`
+          );
+
+          setValeur((prevValue) => {
+            const newValue = prevValue + 1 / 60;
+            if (newValue >= 1) {
+              clearInterval(interval);
+              return 1;
+            }
+            return newValue;
+          });
+
+          temps_restant--;
+          
+          if (temps_restant === 0) {
+            console.log("Temps écoulé !");
+            clearInterval(interval);
+            navigation.push("TakeRest", {
+              exercice: {
+                allExos: allExos.filters((it) => it.id !== exercice?.infos?.id),
+                exercice: allExos[1],
+              },
+            });
+          }
+        }, 1000);
+      }
     }
 
     return (
@@ -108,14 +123,14 @@ const StartExerciseScreen = ({ navigation, route }) => {
           <Text style={{ textAlign: "center", ...Fonts.blackColor14Medium }}>
             {exercice?.infos?.name}
           </Text>
-          <Text style={{ ...Fonts.grayColor13Regular }}>
+          {/* <Text style={{ ...Fonts.grayColor13Regular }}>
             Next: {allExos[1]?.infos?.name}
-          </Text>
+          </Text> */}
         </View>
         <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => {
-            setStart(!start);
+            setStart(true);
             timerWorks();
           }}
           style={styles.playArrowIconWrapStyle}
@@ -131,7 +146,14 @@ const StartExerciseScreen = ({ navigation, route }) => {
           color={Colors.blackColor}
           size={24}
           style={{ position: "absolute", right: 20.0, bottom: 5.0 }}
-          onPress={() => navigation.push("TakeRest")}
+          onPress={() =>
+            navigation.push("TakeRest", {
+              exercice: {
+                allExos: allExos,
+                exercice: allExos[1],
+              },
+            })
+          }
         />
       </View>
     );

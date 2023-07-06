@@ -1,8 +1,9 @@
 import axios from "axios";
 import user from "./user";
+import {API_URL} from '@env'
 
 class Messenger {
-  API_URL = "http://localhost:8000/messenger";
+  API_URL = API_URL + "messenger";
   rooms = [];
   userId = user.userId;
   constructor() {

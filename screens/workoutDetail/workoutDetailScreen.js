@@ -30,6 +30,7 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
   });
 
   async function getStarded() {
+    console.log(item)
     var resp = item?.trainingOnExercices?.map((item, i) => {
       var m = training.exercices.find((it) => it.id === item.exerciceId);
       return {

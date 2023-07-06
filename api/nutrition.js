@@ -1,14 +1,16 @@
 import axios from "axios";
 import user from "./user";
+import {API_URL} from '@env'
 
 class Nutrition {
-  API_URL = "http://localhost:8000/nutrition/";
-  recettes = [];
-  MyRecettes = [];
-  ingredients = [];
-  categories = [];
+  API_URL = API_URL + "nutrition/";
+  recettes;
+  MyRecettes;
+  ingredients;
+  categories;
 
   constructor() {
+    console.log(API_URL + "nutrition/");
     this.getRecettes().then((responses) => {
       this.recettes = responses;
     });
@@ -24,7 +26,7 @@ class Nutrition {
 
   async getRecettes() {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + "");
+      const responses = await axios.get(this.API_URL);
       var data = responses.data.data.nutrition;
       resolve(data);
     });

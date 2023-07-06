@@ -1,8 +1,9 @@
 import axios from "axios";
 import { getLoggedInUser } from "../services/helpers/authUtils";
+import {API_URL} from '@env'
 
 class User {
-  API_URL = "http://localhost:8000/users/";
+  API_URL = API_URL + "users/";
   userId;
   data;
   users;
