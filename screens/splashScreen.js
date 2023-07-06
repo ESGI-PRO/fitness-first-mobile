@@ -20,13 +20,16 @@ const SplashScreen = ({ navigation }) => {
 
     setTimeout(() => {
         // if user is logged in then navigate to home screen
-        if(isUserAuthenticated()){
-            navigation.navigate('BottomTabBar')
-        }else{
+        isUserAuthenticated().then((res) => {
+            if (res) {
+                navigation.navigate('BottomTabBar')
+            } else {
+                navigation.navigate('Onboarding')
+            }
+        }).catch((err) => {
             navigation.navigate('Onboarding')
-        }
-
-   
+            console.log(err);
+        })
     }, 2000)
 
     return (

@@ -1,9 +1,11 @@
-import React, {useEffect} from 'react';
-import {View, Text} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {View, Text, StyleSheet,TouchableOpacity, LogBox } from 'react-native';
 import { TwilioVideo } from 'react-native-twilio-video-webrtc';
 
+LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
+
 const MeetingVideoScreen = ({navigation, route}) => {
-    const [props, setProps] = React.useState({
+    const [props, setProps] = useState({
         ...route.params,
         status: 'disconnected'
     });
@@ -37,7 +39,7 @@ const MeetingVideoScreen = ({navigation, route}) => {
         twilioVideo.current.flipCamera();
     };
 
-    console.log("params", params);
+    console.log("params", route.params);
      return(<View style={{flex: 1}}>
         {
         (props.status === 'connected' || props.status === 'connecting') && (
@@ -154,5 +156,46 @@ const MeetingVideoScreen = ({navigation, route}) => {
             }/>
     </View>);
 };
+
+const styles = StyleSheet.create({
+    callWrapper: {
+        flex: 1,
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    grid: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap'
+    },
+    remoteVideo: {
+        flex: 1
+    },
+    optionsContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 100,
+        backgroundColor: 'transparent',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    button: {
+        width: 60,
+        height: 60,
+        marginHorizontal: 10,
+        borderRadius: 30,
+        backgroundColor: 'red',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    buttonText: {
+        fontSize: 12,
+        color: 'white'
+    }
+});
 
 export default MeetingVideoScreen;
