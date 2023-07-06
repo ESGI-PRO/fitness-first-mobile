@@ -29,6 +29,10 @@ import ExercicesDetailsScreen from './screens/training/pages/exercicesDetail';
 import AddRecettesScreen from "./screens/recettes/pages/addRecettes";
 import InstructionsPageScreen from "./screens/recettes/pages/instructionsPage";
 import RecettesDetailsScreen from "./screens/recettesDetails/recettesDetailsScreen";
+import MeetingComponent from "./screens/meetings/index";
+import MeetingCreationScreen from "./screens/meetings/meetingCreationScreen";
+import MeetingVideoScreen from "./screens/meetings/meetingVideoScreen";
+
 
 LogBox.ignoreAllLogs();
 
@@ -69,6 +73,9 @@ const App = () => {
           <Stack.Screen name="TrainerDetail" component={TrainerDetailScreen} />
           <Stack.Screen name="Message" component={MessageScreen} />
           <Stack.Screen name="PremiumPlans" component={PremiumPlansScreen} />
+          <Stack.Screen name="Meeting" component={MeetingComponent} />
+          <Stack.Screen name="MeetingCreation" component={MeetingCreationScreen} />
+          <Stack.Screen name="MeetingVideo" component={MeetingVideoScreen} />
           <Stack.Screen
             name="HealthTipsDetail"
             component={HealthTipsDetailScreen}
