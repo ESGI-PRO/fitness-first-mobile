@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LOGIN_URL, REGISTER_URL } from '../../constants/api.url.constants'
+import { LOGIN_URL, REGISTER_URL, LOGOUT_URL } from '../../constants/api.url.constants'
 import { APIClient, handleErrors } from '../helpers/apiClient';
-import user from '../../api/user';
 
 const client = new APIClient();
 
@@ -12,13 +11,11 @@ export default class AuthService {
     const response = await client
       .post(LOGIN_URL, { email, password });
     handleErrors(response);
-
-    user.data = response.data?.user;
-    return response.data;
+    return response;
   }
 
   async logout() {
-    await client.post(LOGOUT_URL);
+    await client.put(LOGOUT_URL);
     AsyncStorage.removeItem("user");
     AsyncStorage.removeItem("tokens");
   }
@@ -41,5 +38,7 @@ export default class AuthService {
       ...newUser
     });
     handleErrors(response);
+
+    return response;
   }
 }
