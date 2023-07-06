@@ -1,6 +1,7 @@
 import axios from "axios";
 import user from "./user";
-import {API_URL} from '@env'
+import { API_URL } from "@env";
+import { getHeaders } from "../services/helpers/apiClient";
 
 class Nutrition {
   API_URL = API_URL + "nutrition/";
@@ -10,7 +11,7 @@ class Nutrition {
   categories;
 
   constructor() {
-    console.log(API_URL + "nutrition/");
+    console.log(this.API_URL);
     this.getRecettes().then((responses) => {
       this.recettes = responses;
     });
@@ -26,7 +27,9 @@ class Nutrition {
 
   async getRecettes() {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL);
+      const responses = await axios.get(this.API_URL, {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.nutrition;
       resolve(data);
     });
@@ -40,7 +43,9 @@ class Nutrition {
 
     if (user.userId === null) resolve(null);
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + user.userId + "/user");
+      const responses = await axios.get(this.API_URL + user.userId + "/user", {
+        headers: await getHeaders(),
+      });
       this.MyRecettes = responses.data.data.nutrition;
       resolve(this.MyRecettes);
     });
@@ -48,7 +53,9 @@ class Nutrition {
 
   async getIngredients() {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + "ingredients");
+      const responses = await axios.get(this.API_URL + "ingredients", {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.nutrition;
       resolve(data);
     });
@@ -60,7 +67,9 @@ class Nutrition {
 
   async getCategories() {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + "categories");
+      const responses = await axios.get(this.API_URL + "categories", {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.nutrition;
       resolve(data);
     });
@@ -68,7 +77,9 @@ class Nutrition {
 
   async getRecettesByID(id) {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + id);
+      const responses = await axios.get(this.API_URL + id, {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.nutrition;
       resolve(data);
     });
@@ -77,7 +88,9 @@ class Nutrition {
   async getIngredientsByID(id) {
     console.log("getIngredientsByID", id, typeof id);
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + "ingredients/" + id);
+      const responses = await axios.get(this.API_URL + "ingredients/" + id, {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.nutrition;
       resolve(data);
     });
@@ -85,7 +98,9 @@ class Nutrition {
 
   async deleteRecettesByID(id) {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.delete(this.API_URL + id);
+      const responses = await axios.delete(this.API_URL + id, {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.nutrition;
       resolve(data);
     });
@@ -93,7 +108,9 @@ class Nutrition {
 
   async create(data) {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.post(this.API_URL, data);
+      const responses = await axios.post(this.API_URL, data, {
+        headers: await getHeaders(),
+      });
       var results = responses.data.data.nutrition;
       resolve(results);
     });

@@ -1,6 +1,7 @@
 import axios from "axios";
 import user from "./user";
 import {API_URL} from '@env'
+import { getHeaders } from "../services/helpers/apiClient";
 
 class Messenger {
   API_URL = API_URL + "messenger";
@@ -13,7 +14,9 @@ class Messenger {
   }
 
   async getRooms(userId) {
-    console.log(this.API_URL + "/get-all-rooms/" + userId);
+    console.log(this.API_URL + "/get-all-rooms/" + userId , {
+      headers: await getHeaders(),
+    });
     const response = await axios.get(
       this.API_URL + "/get-all-rooms/" + userId
     );
@@ -23,7 +26,9 @@ class Messenger {
 
   async getMessages(roomId) {
     return new Promise(async (resolve, reject) => {
-      console.log(this.API_URL + "/get-room-messages/" + roomId);
+      console.log(this.API_URL + "/get-room-messages/" + roomId , {
+        headers: await getHeaders(),
+      });
       const response = await axios.get(
         this.API_URL + "/get-room-messages/" + roomId
       );
@@ -36,7 +41,9 @@ class Messenger {
 
   async createMessage(data) {
     return new Promise(async (resolve, reject) => {
-      console.log(this.API_URL + "/create_message");
+      console.log(this.API_URL + "/create_message" , {
+        headers: await getHeaders(),
+      });
       const response = await axios.post(
         this.API_URL + "/create_message" , data
       );

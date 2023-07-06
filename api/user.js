@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getLoggedInUser } from "../services/helpers/authUtils";
 import {API_URL} from '@env'
+import { getHeaders } from "../services/helpers/apiClient";
 
 class User {
   API_URL = API_URL + "users/";
@@ -36,7 +37,9 @@ class User {
 
   async getUsers() {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL);
+      const responses = await axios.get(this.API_URL , {
+        headers: await getHeaders(),
+      });
       var data = responses.data;
       resolve(data);
     });
@@ -44,7 +47,9 @@ class User {
 
   async getTrainers() {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL);
+      const responses = await axios.get(this.API_URL , {
+        headers: await getHeaders(),
+      });
       var data = responses.data;
 
       const list = data

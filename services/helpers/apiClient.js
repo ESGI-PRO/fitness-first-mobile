@@ -3,7 +3,7 @@ import { REFRESH_TOKEN_URL } from "../../constants/api.url.constants";
 import config from "../config";
 import { getTokens, setLoggedInUser, setTokens } from "./authUtils";
 
-const getHeaders = async () => {
+export const getHeaders = async () => {
     const tokens = await getTokens();
     return tokens?.access?.token ? {
         'Authorization': `Bearer `,

@@ -1,6 +1,7 @@
 import axios from "axios";
 import user from "./user";
 import {API_URL} from '@env'
+import { getHeaders } from "../services/helpers/apiClient";
 
 
 class TrainingsAPI {
@@ -27,7 +28,9 @@ class TrainingsAPI {
 
   async getTrainings() {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL);
+      const responses = await axios.get(this.API_URL , {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.training;
       resolve(data);
     });
@@ -35,7 +38,9 @@ class TrainingsAPI {
 
   async getTrainingsByUserId(userId) {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + "user/" + user.userId);
+      const responses = await axios.get(this.API_URL + "user/" + user.userId , {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.training;
 
       resolve(data);
@@ -60,7 +65,9 @@ class TrainingsAPI {
       };
       console.log(values);
 
-      await axios.post(this.API_URL + "", values).then((res) => {
+      await axios.post(this.API_URL + "", values , {
+        headers: await getHeaders(),
+      }).then((res) => {
         console.log(res);
         console.log(res.data);
         if (res.data.data.length > 0) resolve(true);
@@ -73,7 +80,9 @@ class TrainingsAPI {
   //** FETCH EXERCICES */
   async getExercices() {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + "exercices");
+      const responses = await axios.get(this.API_URL + "exercices" , {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.exercices.data;
 
       resolve(data);
@@ -82,7 +91,9 @@ class TrainingsAPI {
 
   async getExerciceByID(id) {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + "exercices/" + id);
+      const responses = await axios.get(this.API_URL + "exercices/" + id , {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.exercices.data;
 
       resolve(data);
@@ -91,7 +102,9 @@ class TrainingsAPI {
 
   async getTypesExercices() {
     return new Promise(async (resolve, reject) => {
-      const responses = await axios.get(this.API_URL + "category/");
+      const responses = await axios.get(this.API_URL + "category/" , {
+        headers: await getHeaders(),
+      });
       var data = responses.data.data.exercices.data;
       resolve(data);
     });
