@@ -30,7 +30,7 @@ export default class AuthService {
         password,
         userName,
         mobileNumber,
-        isTrainer,
+        isTrainer: isTrainer ? isTrainer : false,
         trainerSpeciality,
         trainerId: "",
         traineeIds: [],

@@ -252,6 +252,22 @@ const ProfileScreen = ({ navigation }) => {
       </TouchableOpacity>
     );
   }
+    function aboutOptions() {
+        return (
+            <View style={{ marginTop: Sizes.fixPadding * 2.0, }}>
+                <Text style={{ marginBottom: Sizes.fixPadding + 5.0, marginHorizontal: Sizes.fixPadding * 2.0, ...Fonts.grayColor13Bold }}>
+                    ABOUT
+                </Text>
+                {optionsShort({ option: 'My Trainer', navigateTo: 'Trainers' })}
+                {optionsShort({ option: 'Favorite List', navigateTo: 'FavoriteList' })}
+                {optionsShort({ option: 'Notifications', navigateTo: 'Notifications' })}
+                {optionsShort({ option: 'Premium Plan', navigateTo: 'PremiumPlans' })}
+                {optionsShort({ option: 'My Meetings', navigateTo: 'Meeting' })}
+                {optionsShort({ option: 'Privacy Policy' })}
+                {optionsShort({ option: 'Terms of Use' })}
+            </View>
+        )
+    }
 
   function fetchIsTrainer() {
     switch (user.data?.isTrainer) {

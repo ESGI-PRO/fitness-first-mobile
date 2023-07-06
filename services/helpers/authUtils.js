@@ -3,9 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 /**
  * Checks if user is authenticated
  */
-const isUserAuthenticated = () => {
+const isUserAuthenticated = async () => {
     const user = getLoggedInUser();
-    const tokens = getTokens();
+    const tokens = await getTokens();
     if (!user || !tokens) {
         return false;
     }
@@ -49,7 +49,6 @@ const getLoggedInUser = async () => {
  */
  const getTokens = async () => {
     const tokens = await AsyncStorage.getItem('tokens');
-    console.log("tokens first", tokens)
     return tokens ? (typeof (tokens) == 'object' ? tokens : JSON.parse(tokens)) : null;
 }
 

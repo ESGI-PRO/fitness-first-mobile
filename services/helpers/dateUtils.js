@@ -8,7 +8,7 @@ export function getTime(date) {
   return moment(date).format('h:mm A')
 }
 
-export function chatDividerFormat(date) {
+export function dateDividerFormat(date) {
   return moment(date).format('MMMM D, YYYY')
 }
 

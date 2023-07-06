@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { SafeAreaView, View, StatusBar, StyleSheet, ImageBackground, Image, BackHandler } from 'react-native';
 import { Colors, Sizes } from '../constants/styles';
 import { useFocusEffect } from '@react-navigation/native';
+import { isUserAuthenticated } from '../services/helpers/authUtils';
 
 const SplashScreen = ({ navigation }) => {
 
@@ -18,7 +19,14 @@ const SplashScreen = ({ navigation }) => {
     );
 
     setTimeout(() => {
-        navigation.navigate('Onboarding')
+        // if user is logged in then navigate to home screen
+        if(isUserAuthenticated()){
+            navigation.navigate('BottomTabBar')
+        }else{
+            navigation.navigate('Onboarding')
+        }
+
+   
     }, 2000)
 
     return (

@@ -5,7 +5,6 @@ import { getTokens, setLoggedInUser, setTokens } from "./authUtils";
 
 const getHeaders = async () => {
     const tokens = await getTokens();
-    console.log("tokens", tokens)
     return tokens?.access?.token ? {
         'Authorization': `Bearer `,
         'Content-Type': 'application/json',
