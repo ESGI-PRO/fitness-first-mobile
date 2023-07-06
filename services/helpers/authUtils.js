@@ -4,8 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
  * Checks if user is authenticated
  */
 const isUserAuthenticated = async () => {
-    const user = getLoggedInUser();
+    const user = await getLoggedInUser();
     const tokens = await getTokens();
+
     if (!user || !tokens) {
         return false;
     }
