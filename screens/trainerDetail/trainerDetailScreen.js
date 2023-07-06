@@ -3,6 +3,7 @@ import { Text, View, StatusBar, TouchableOpacity, SafeAreaView, StyleSheet } fro
 import { Fonts, Colors, Sizes } from "../../constants/styles";
 import CollapsingToolbar from "../../components/sliverAppBarScreen";
 import { MaterialIcons } from '@expo/vector-icons';
+import user from "../../api/user";
 
 const trainerAboutList = [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -15,6 +16,7 @@ const TrainerDetailScreen = ({ navigation, route }) => {
     const item = route.params.item;
 
     console.log(item)
+    
     const [state, setState] = useState({
         showMore: false,
         isFavorite: false,
@@ -55,6 +57,10 @@ const TrainerDetailScreen = ({ navigation, route }) => {
                     </View>
                 </CollapsingToolbar>
             </View>
+            <Text  fontSize="xs">
+                {JSON.stringify(user?.data)}
+            </Text>
+            
             {messageAndFollowButton()}
         </SafeAreaView>
     )
@@ -66,6 +72,7 @@ const TrainerDetailScreen = ({ navigation, route }) => {
                     activeOpacity={0.9}
                     onPress={() => navigation.push('Message', { item: item })}
                     style={styles.messageButtonStyle}
+                    className={user?.data.traineeIds}
                 >
                     <Text style={{ ...Fonts.whiteColor18Bold }}>
                         Message

@@ -84,6 +84,7 @@ const ProfileScreen = ({ navigation }) => {
               activeOpacity={0.9}
               onPress={() => {
                 updateState({ showLogoutDialog: false });
+                user.logout()
                 navigation.push("LoginRegister");
               }}
               style={{
@@ -257,8 +258,11 @@ const ProfileScreen = ({ navigation }) => {
       case true:
         return { option: "Mes eleves", navigateTo: "Trainers" };
         break;
-      default:
+      case false:
         return { option: "Mon coach", navigateTo: "Trainers" };
+        break;
+      default:
+        return { option: "", navigateTo: "Trainers" };
         break;
     }
   }
@@ -275,7 +279,7 @@ const ProfileScreen = ({ navigation }) => {
         >
           ABOUT
         </Text>
-        <Text fontSize="xs">{JSON.stringify(user.data)}</Text>
+        {/* <Text fontSize="xs">{JSON.stringify(user.data)}</Text> */}
 
         {optionsShort(fetchIsTrainer())}
         {optionsShort({ option: "Favorite List", navigateTo: "FavoriteList" })}

@@ -135,8 +135,6 @@ const NosTrainingsScreen = ({ navigation }) => {
 
   async function getTrainingFetch() {
     API.getTrainings().then((response) => {
-      trainingsList.length = 0;
-
       var all = response.filter((element) => element.userId !== user.userId);
       trainingsList.push(...all);
       setListData(...response);

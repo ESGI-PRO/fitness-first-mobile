@@ -324,11 +324,14 @@ const WorkoutScreen = ({ navigation }) => {
             workoutMinute: 9,
             workoutLevel: 9,
             isFavorite: false,
-            ...item,
+            trainingOnExercices: item[index].trainingOnExercices,
+            name: item[index].name,
+            description: item[index].description,
           });
         }
       }
       setTopWorkouts(p);
+
     });
   }
 
@@ -363,8 +366,11 @@ const WorkoutScreen = ({ navigation }) => {
                   //     ...Fonts.blackColor14Medium,
                   //   }}
                   style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+
                 >
                   {item.workoutName}
+          {/* {JSON.stringify(item.data)} */}
+
                 </Text>
                 {/* {item.workoutDescription ? (
                   <Text
