@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useWindowDimensions, StyleSheet, SafeAreaView, StatusBar} from 'react-native';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {TabView, TabBar} from 'react-native-tab-view';
 import NewMeetingScreen from './newMeetingScreen';
 import MyMeetingsScreen from './myMeetingScreen';
 import {View, Text} from 'react-native';

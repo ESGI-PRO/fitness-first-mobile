@@ -8,7 +8,7 @@ import MeetingService from "../../services/api/meeting";
 import { getLoggedInUser } from "../../services/helpers/authUtils";
 
 
-const meetinService = new MeetingService();
+const meetingService = new MeetingService();
 
 export default function MeetinCreationScreen({ navigation, route }) {
     const item = route.params.item;
@@ -127,7 +127,7 @@ export default function MeetinCreationScreen({ navigation, route }) {
             members: [opponent.id, connectedUser.id]
         }
         console.log("meeting-data", data);
-        await meetinService.createMeeting(data);
+        await meetingService.createMeeting(data);
         navigation.pop();
     }
 
