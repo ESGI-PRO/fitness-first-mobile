@@ -1,6 +1,16 @@
 {
   "expo": {
     "name": "RN FitnessFirst",
+    "plugins": [
+      [
+        "react-native-twilio-video-webrtc",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone"
+        }
+      ],
+      "expo-build-properties"
+    ],
     "slug": "rn-FitnessFirst",
     "version": "1.0.0",
     "orientation": "portrait",
