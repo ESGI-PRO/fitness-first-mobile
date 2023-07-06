@@ -196,8 +196,8 @@ const AddRecettesScreen = ({ navigation, route }) => {
 
     return (
       <View>
-        <Text fontSize="xs">{JSON.stringify(listIngredients)}</Text>
-        <Text fontSize="xs">{instruction}</Text>
+        {/* <Text fontSize="xs">{JSON.stringify(listIngredients)}</Text>
+        <Text fontSize="xs">{instruction}</Text> */}
 
         {listIngredients.map((item, index) => {
           return (

@@ -3,22 +3,22 @@ import user from "./user";
 
 class TrainingsAPI {
   API_URL = "http://localhost:8000/training/";
-  exercices = [];
-  trainings = [];
-  userTraining = [];
+  exercices;
+  trainings;
+  userTraining;
   userId = user.userId;
 
   constructor() {
     this.getTrainings().then((item) => {
-      this.trainings.push(...item);
+      this.trainings = item
     });
 
     this.getExercices().then((item) => {
-      this.exercices.push(...item);
+      this.exercices = item;
     });
 
     this.getTrainingsByUserId(this.usersId).then((item) => {
-      this.userTraining.push(...item);
+      this.userTraining = item;
     });
   }
 

@@ -15,98 +15,14 @@ import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { Snackbar } from "react-native-paper";
 import training from "../../api/trainings";
 
-const API = training
+const API = training;
 const { width, height } = Dimensions.get("window");
-
-var workoutStepsList = [
-  //   {
-  //     id: "1",
-  //     exerciseImage: require("../../assets/images/workout/workout4.png"),
-  //     exerciseName: "Barbell Bench Press",
-  //     burns: 6,
-  //     time: "1 Min",
-  //     stepNumber: 1,
-  //   },
-  //   {
-  //     id: "2",
-  //     exerciseImage: require("../../assets/images/workout/workout5.png"),
-  //     exerciseName: "Barbell Back Squat",
-  //     burns: 6,
-  //     time: "1 Min",
-  //     stepNumber: 2,
-  //   },
-  //   {
-  //     id: "3",
-  //     exerciseImage: require("../../assets/images/workout/workout6.png"),
-  //     exerciseName: "Pull-Ups",
-  //     burns: 6,
-  //     time: "1 Min",
-  //     stepNumber: 3,
-  //   },
-  //   {
-  //     id: "4",
-  //     exerciseImage: require("../../assets/images/workout/workout2.png"),
-  //     exerciseName: "Lying Dumbell Hamstring Curls",
-  //     burns: 6,
-  //     time: "1 Min",
-  //     stepNumber: 4,
-  //   },
-  //   {
-  //     id: "5",
-  //     exerciseImage: require("../../assets/images/workout/workout7.png"),
-  //     exerciseName: "Standing Overhead Press",
-  //     burns: 6,
-  //     time: "1 Min",
-  //     stepNumber: 5,
-  //   },
-  //   {
-  //     id: "6",
-  //     exerciseImage: require("../../assets/images/workout/workout8.png"),
-  //     exerciseName: "Face Pulls",
-  //     burns: 6,
-  //     time: "1 Min",
-  //     stepNumber: 6,
-  //   },
-  //   {
-  //     id: "7",
-  //     exerciseImage: require("../../assets/images/workout/workout9.png"),
-  //     exerciseName: "Drag Curls",
-  //     burns: 6,
-  //     time: "1 Min",
-  //     stepNumber: 7,
-  //   },
-  //   {
-  //     id: "8",
-  //     exerciseImage: require("../../assets/images/workout/workout10.png"),
-  //     exerciseName: "Jumping Jacks",
-  //     burns: 6,
-  //     time: "1 Min",
-  //     stepNumber: 8,
-  //   },
-  //   {
-  //     id: "9",
-  //     exerciseImage: require("../../assets/images/workout/workout11.png"),
-  //     exerciseName: "Soulder Rotation",
-  //     burns: 6,
-  //     time: "1 Min",
-  //     stepNumber: 9,
-  //   },
-];
 
 const WorkoutDetailScreen = ({ navigation, route }) => {
   const item = route.params.item;
 
-  useEffect(() => {
-
-    getStarded();
-
-    return () => {
-      getStarded();
-    };
-  } , []);
-
   const [exercices, setExercices] = useState([]);
-  const [exercicesD, setExercicesD] = useState([]);
+  const [workoutStepsList, setworkoutStepsList] = useState([]);
 
   const [state, setState] = useState({
     showSnackBar: false,
@@ -114,27 +30,21 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
   });
 
   async function getStarded() {
-    workoutStepsList.length = 0;
-
-    console.log(item)
-
-    item?.trainingOnExercices?.forEach((item, i) => {
-      console.log(i)
-      API.getExerciceByID(item.exerciceId).then((exercice) => {
-        var v = {
-          id: item.exerciceId,
-          exerciseImage: require(`../../assets/images/workout/workout4.png`),
-          exerciseName: exercice.name,
-          burns: item.repetition,
-          series: item.series,
-          time: "1 Min",
-          stepNumber: i + 1,
-          infos: { ...exercice },
-        };
-
-        workoutStepsList.push(v);
-      });
+    var resp = item?.trainingOnExercices?.map((item, i) => {
+      var m = training.exercices.find((it) => it.id === item.exerciceId);
+      return {
+        id: item.exerciceId,
+        exerciseImage: require(`../../assets/images/workout/workout4.png`),
+        exerciseName: m.name,
+        burns: item.repetition,
+        series: item.series,
+        time: "1 Min",
+        stepNumber: i + 1,
+        infos: { ...m },
+      };
     });
+    if (workoutStepsList.length === 0)
+      setworkoutStepsList([...workoutStepsList, ...resp]);
   }
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
@@ -165,18 +75,31 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
   );
 
   function workoutSteps() {
+    useEffect(() => {
+      getStarded();
+    }, []);
+
     return (
       <View>
+        {/* <Text fontSize="xs">{JSON.stringify(workoutStepsList[0])}</Text> */}
+
         {workoutStepsList.map((items) => (
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => navigation.push("StepDetail", { item: {...items , totalSteps: item.trainingOnExercices?.length} })}
-            key={items.id}
+            onPress={() =>
+              navigation.push("StepDetail", {
+                item: {
+                  ...items,
+                  totalSteps: item.trainingOnExercices?.length,
+                },
+              })
+            }
+            key={items?.id}
             style={styles.workoutStepsWrapStyle}
           >
             <View style={styles.workoutStepsDetailWrapStyle}>
               <Image
-                source={items.exerciseImage}
+                source={items?.exerciseImage}
                 style={{
                   width: width / 4.5,
                   height: height / 8.0,
@@ -184,16 +107,16 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
               />
               <View>
                 <Text style={{ ...Fonts.blackColor13Medium }}>
-                  {items.exerciseName}
+                  {items?.exerciseName}
                 </Text>
                 <Text style={{ ...Fonts.grayColor13Regular }}>
-                  Repetitons : {items.burns}
+                  Repetitons : {items?.burns}
                 </Text>
                 <Text style={{ ...Fonts.grayColor13Regular }}>
-                  Series : {items.series}
+                  Series : {items?.series}
                 </Text>
                 <Text style={{ ...Fonts.grayColor13Regular }}>
-                  Temps par series : {items.time}
+                  Temps par series : {items?.time}
                 </Text>
               </View>
             </View>
@@ -205,7 +128,7 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
                   ...Fonts.blackColor10Bold,
                 }}
               >
-                Step:{items.stepNumber}
+                Step:{items?.stepNumber}
               </Text>
               <View style={styles.workoutStepForwardArrowWrapStyle}>
                 <MaterialIcons
@@ -233,7 +156,8 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
           {item.trainingOnExercices?.length > 1
             ? `${item.trainingOnExercices?.length} Exercices`
             : `${item.trainingOnExercices?.length} Exercice`}{" "}
-          • 9 Minutes • 54 Calories • Beginner
+          • {workoutStepsList.length} Minutes • 54 Calories •{" "}
+          {workoutStepsList[0]?.infos?.difficulty}
         </Text>
         <Text
           style={{
@@ -265,22 +189,24 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
                 ...Fonts.blackColor14Medium,
               }}
             >
-              {item.name}
+              {item.name ? item.name : item?.data[0].name}
             </Text>
-            {item.description ? (
+            {item.description || item?.data[0].description ? (
               <Text
                 style={{
                   marginBottom: Sizes.fixPadding - 7.0,
                   ...Fonts.blackColor12Regular,
                 }}
               >
-                {item.description}
+                {item.description
+                  ? item.description
+                  : item?.data[0].description}
               </Text>
             ) : null}
             <Text style={{ ...Fonts.blackColor12SemiBold }}>
-              0 Min - 0 level
+              level : {workoutStepsList[0]?.infos?.difficulty}
             </Text>
-            <MaterialIcons
+            {/* <MaterialIcons
               name={isFavorite ? "favorite" : "favorite-border"}
               color={Colors.blackColor}
               size={20}
@@ -291,9 +217,12 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
               onPress={() =>
                 updateState({ isFavorite: !isFavorite, showSnackBar: true })
               }
-            />
+            /> */}
           </View>
-          <Image src={item.image} style={styles.workoutImageStyle} />
+          <Image
+            src={item.image ? item.image : ``}
+            style={styles.workoutImageStyle}
+          />
         </View>
       </View>
     );

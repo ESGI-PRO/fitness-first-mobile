@@ -8,6 +8,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import {specialityList} from '../../constants/globals';
 import AuthService  from "../../services/api/auth";
+import user from "../../api/user";
 
 const { width, height } = Dimensions.get('window');
 const authService = new AuthService();
@@ -101,6 +102,7 @@ const LoginRegisterScreen = ({ navigation }) => {
             password: loginPassword,
         }
         authService.login(data).then((res) => {
+            user.init()
             navigation.push('BottomTabBar')
             console.log('res', res);
         }).catch((err) => {
