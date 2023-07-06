@@ -26,11 +26,6 @@ const MyMeetingsScreen = ({rootNavigation}) => {
         init();
     }, []);
 
-    const getRoom = async (opponentId) => {
-        const room = await meetingService.GetRoomByIds([connectedUser.id, opponentId]);
-        console.log("room", room);
-        return room;
-    }
 
     const joinMeeting = async (item) => {
         console.log("item", item);
