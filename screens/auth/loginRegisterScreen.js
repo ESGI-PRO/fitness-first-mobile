@@ -103,8 +103,13 @@ const LoginRegisterScreen = ({ navigation }) => {
         }
         authService.login(data).then((res) => {
             user.init()
-            navigation.push('BottomTabBar')
-            console.log('res', res);
+            console.log('reshere', res);
+            if(res.message === 'user_search_by_credentials_not_match'){
+                alert('User password invalid')
+                return;
+            }else{
+                navigation.push('BottomTabBar')
+            }
         }).catch((err) => {
             console.log('err', err);
         })

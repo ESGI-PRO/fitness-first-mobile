@@ -15,8 +15,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { SharedElement } from "react-navigation-shared-element";
 import Dialog from "react-native-dialog";
 import user from "../../api/user";
+import AuthService from "../../services/api/auth";
 
 const { width } = Dimensions.get("window");
+const authService = new AuthService();
 
 const ProfileScreen = ({ navigation }) => {
   const [state, setState] = useState({
@@ -34,6 +36,13 @@ const ProfileScreen = ({ navigation }) => {
     dummyTrainingRest,
     showLogoutDialog,
   } = state;
+
+  const logOutFunc = async () => {
+    updateState({ showLogoutDialog: false });
+    await authService.logout()
+    navigation.push("LoginRegister");
+}
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bodyBackColor }}>
@@ -56,6 +65,7 @@ const ProfileScreen = ({ navigation }) => {
       {logoutDialog()}
     </SafeAreaView>
   );
+
 
   function logoutDialog() {
     return (
@@ -82,11 +92,7 @@ const ProfileScreen = ({ navigation }) => {
           >
             <TouchableOpacity
               activeOpacity={0.9}
-              onPress={() => {
-                updateState({ showLogoutDialog: false });
-                user.logout()
-                navigation.push("LoginRegister");
-              }}
+              onPress={logOutFunc}
               style={{
                 ...styles.logoutButtonStyle,
                 marginRight: Sizes.fixPadding - 5.0,
@@ -293,7 +299,7 @@ const ProfileScreen = ({ navigation }) => {
         {optionsShort({ option: "Mes Programmes", navigateTo: "Training" })}
         {/* Training */}
         {optionsShort({ option: "Premium Plan", navigateTo: "PremiumPlans" })}
-        {optionsShort({ option: "Share with Friends" })}
+        {optionsShort({ option: 'My Meetings', navigateTo: 'Meeting' })}
         {optionsShort({ option: "Privacy Policy" })}
         {optionsShort({ option: "Terms of Use" })}
       </View>
