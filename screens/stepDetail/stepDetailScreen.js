@@ -77,7 +77,7 @@ const StepDetailScreen = ({ navigation, route }) => {
             activeOpacity={0.9}
             onPress={() => {
               updateState({ showReadyDialog: false });
-              navigation.push("StartExercise");
+              navigation.push("StartExercise" , { exercice: item});
             }}
             style={styles.readyButtonStyle}
           >

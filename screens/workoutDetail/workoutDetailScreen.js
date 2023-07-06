@@ -91,6 +91,7 @@ const WorkoutDetailScreen = ({ navigation, route }) => {
                 item: {
                   ...items,
                   totalSteps: item.trainingOnExercices?.length,
+                  allExos: workoutStepsList
                 },
               })
             }

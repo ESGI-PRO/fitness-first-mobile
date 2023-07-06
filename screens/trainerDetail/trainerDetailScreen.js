@@ -118,12 +118,14 @@ const TrainerDetailScreen = ({ navigation, route }) => {
                     <Text style={{ ...Fonts.grayColor13Regular }}>
                         {item.trainerSpeciality}
                     </Text>
+                    <div className={user.data?.isTrainer === true ? '' : 'hidden'}>
                     <Text style={{ marginLeft: Sizes.fixPadding * 2.0, ...Fonts.primaryColor13Medium }}>
                         {item?.data?.traineeIds?.length ? item?.data?.traineeIds.length : 0}
                     </Text>
                     <Text style={{ marginLeft: Sizes.fixPadding - 5.0, ...Fonts.grayColor13Regular }}>
                         eleves
                     </Text>
+                    </div>
                 </View>
                 <View style={{ marginVertical: Sizes.fixPadding + 5.0, backgroundColor: '#cccccc', height: 1.0, }} />
             </View>
