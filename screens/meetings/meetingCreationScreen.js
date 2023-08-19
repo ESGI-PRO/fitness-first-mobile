@@ -6,13 +6,14 @@ import { MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import MeetingService from "../../services/api/meeting";
 import { getLoggedInUser } from "../../services/helpers/authUtils";
+import { useAppState } from '../../context/app-state-context';
 
 
 const meetingService = new MeetingService();
 
 export default function MeetinCreationScreen({ navigation, route }) {
     const item = route.params.item;
-    console.log("item", item);
+    const {setAppState} = useAppState();
     const [connectedUser, setConnectedUser] = React.useState(null);
     const [opponent, setOpponent] = React.useState(null);
     const [meeting, setMeeting] = React.useState({
@@ -38,7 +39,6 @@ export default function MeetinCreationScreen({ navigation, route }) {
         })
     };
     const onChangeDate = (e, selectedDate) => {
-        console.log("selectedDate", selectedDate);
         setMeeting({
             ...meeting,
             date: selectedDate
@@ -46,14 +46,12 @@ export default function MeetinCreationScreen({ navigation, route }) {
     };
 
     const onChangeTime = (e, selectedTime) => {
-        console.log("selectedTime", selectedTime);
         setMeeting({
             ...meeting,
             time: selectedTime
         })
     };
 
-    console.log("itemhere", item);
 
     function header() {
         return (
@@ -112,7 +110,6 @@ export default function MeetinCreationScreen({ navigation, route }) {
                         alignItems: 'flex-start'
                     }
                 }}
-                
             />
         )
   }
@@ -126,14 +123,13 @@ export default function MeetinCreationScreen({ navigation, route }) {
             description: meeting.description,
             members: [opponent.id, connectedUser.id]
         }
-        console.log("meeting-data", data);
         await meetingService.createMeeting(data);
+        const meetings = await meetingService.getAllUserMeetings(connectedUser.id);
+        setAppState({meetings: meetings})
         navigation.pop();
     }
 
   }
-
-  console.log("meeting", meeting);
 
     return (
         <SafeAreaView style={
