@@ -39,7 +39,7 @@ const MeetingVideoScreen = ({navigation, route}) => {
         twilioVideo.current.flipCamera();
     };
 
-    console.log("params", route.params);
+
      return(<View style={{flex: 1}}>
         {
         (props.status === 'connected' || props.status === 'connecting') && (
