@@ -6,33 +6,30 @@ import MeetingService from "../../services/api/meeting";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { getRandomeUserImage } from '../../constants/globals';
 import { dateDividerFormat, getTime } from '../../services/helpers/dateUtils';
+import { useAppState } from '../../context/app-state-context';
 
 
 const meetingService = new MeetingService();
 
 const MyMeetingsScreen = ({rootNavigation}) => {
     const [connectedUser, setConnectedUser] = React.useState(null);
-    const [meetings, setMeetings] = React.useState([]);
-
+    const {appState, setAppState} = useAppState();
 
     React.useEffect(() => {
         const init = async () => {
             const user = await getLoggedInUser();
             setConnectedUser(user);
             const meetings = await meetingService.getAllUserMeetings(user.id);
-            console.log("meetings", meetings);
-            setMeetings(meetings);
+            setAppState({meetings: meetings})
         };
         init();
     }, []);
 
 
     const joinMeeting = async (item) => {
-        console.log("item", item);
         const opponent = item.members.find((member) => member.id !== connectedUser.id);
         const {token} = await meetingService.getTwilioToken(connectedUser.id);
         const room = await meetingService.getRoomByIds([connectedUser.id, opponent.id]);
-        console.log("MeetingVideo",{ opponent: opponent , token: token, roomName: room._id });
         rootNavigation.push('MeetingVideo', { opponent: opponent , token: token, roomName: room });
     }
 
@@ -90,7 +87,7 @@ const MyMeetingsScreen = ({rootNavigation}) => {
        <View style={styles.container}>
             <View style={{ flex: 1 }}>
             <FlatList
-            data={meetings}
+            data={appState.meetings}
             keyExtractor={(item) => `${item.id} - ${item.date}`}
             renderItem={renderItem}
             showsVerticalScrollIndicator={false}

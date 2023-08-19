@@ -32,6 +32,7 @@ import RecettesDetailsScreen from "./screens/recettesDetails/recettesDetailsScre
 import MeetingComponent from "./screens/meetings/index";
 import MeetingCreationScreen from "./screens/meetings/meetingCreationScreen";
 import MeetingVideoScreen from "./screens/meetings/meetingVideoScreen";
+import { AppStateContextProvider } from "./context/app-state-context";
 
 
 LogBox.ignoreAllLogs();
@@ -40,6 +41,7 @@ const Stack = createSharedElementStackNavigator();
 
 const App = () => {
   return (
+    <AppStateContextProvider>
     <NativeBaseProvider>
       <NavigationContainer>
         <Stack.Navigator
@@ -107,6 +109,7 @@ const App = () => {
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
+    </AppStateContextProvider>
   );
 };
 
